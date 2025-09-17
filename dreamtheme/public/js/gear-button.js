@@ -170,18 +170,6 @@ function createFloatingGearButton() {
                     </div>
                 </div>
                 <div class="color-section">
-                    <label>Border Color</label>
-                    <div class="color-swatches solid-colors">
-                        <div class="color-swatch white" data-color="white" onclick="changeFormContentStyle('white', 'border')"></div>
-                        <div class="color-swatch light-green" data-color="lightgreen" onclick="changeFormContentStyle('lightgreen', 'border')"></div>
-                        <div class="color-swatch dark-gray" data-color="darkgray" onclick="changeFormContentStyle('darkgray', 'border')"></div>
-                        <div class="color-swatch black" data-color="black" onclick="changeFormContentStyle('black', 'border')"></div>
-                        <div class="color-swatch blue" data-color="blue" onclick="changeFormContentStyle('blue', 'border')"></div>
-                        <div class="color-swatch purple" data-color="purple" onclick="changeFormContentStyle('purple', 'border')"></div>
-                        <div class="color-swatch teal" data-color="teal" onclick="changeFormContentStyle('teal', 'border')"></div>
-                    </div>
-                </div>
-                <div class="color-section">
                     <label>Font Color</label>
                     <div class="color-swatches text-colors">
                         <div class="color-swatch text-white" data-color="white-text" onclick="changeFormContentStyle('white', 'font')"></div>
@@ -1485,12 +1473,22 @@ function changeMainContentTextColor(color) {
         }
 
         function changeFormContentStyle(color, type) {
-            // Remove active class from all swatches in the form content section
+            // Remove active class from all swatches in the specific color section
             const formSection = document.querySelector('.theme-section:nth-child(5)');
             if (formSection) {
-                formSection.querySelectorAll('.color-swatch').forEach(swatch => {
-                    swatch.classList.remove('active');
-                });
+                // Find the specific color section based on type
+                let targetSection;
+                if (type === 'background') {
+                    targetSection = formSection.querySelector('.color-section:nth-child(2)');
+                } else if (type === 'font') {
+                    targetSection = formSection.querySelector('.color-section:nth-child(3)');
+                }
+                
+                if (targetSection) {
+                    targetSection.querySelectorAll('.color-swatch').forEach(swatch => {
+                        swatch.classList.remove('active');
+                    });
+                }
             }
             
             // Add active class to clicked swatch
@@ -1535,68 +1533,101 @@ function changeMainContentTextColor(color) {
                     break;
             }
             
-            // Apply styles based on type
+            // Apply styles based on type - Only target form content area, not navbar or other parts
             if (type === 'background') {
                 styles = `
-                    .page-body, .page-wrapper, .page-content, .layout-main,
-                    .layout-main-section-wrapper, .layout-main-section,
-                    .form-layout, .form-page, .form-tabs-list, .form-tab-content,
-                    .form-section, .card-section, .section-body, .section-head,
-                    .form-column, .form-group, .frappe-control,
-                    .control-input-wrapper, .control-input,
-                    .input-with-feedback, .form-control,
-                    .tab-pane, .nav-link, .nav-item,
-                    .grid-field, .form-grid-container, .form-grid,
-                    .grid-heading-row, .grid-body, .grid-footer,
-                    .timeline-item, .timeline-content,
-                    .comment-box, .comment-input-wrapper {
+                    .layout-main-section .form-layout,
+                    .layout-main-section .form-page,
+                    .layout-main-section .form-tabs-list,
+                    .layout-main-section .form-tab-content,
+                    .layout-main-section .form-section,
+                    .layout-main-section .card-section,
+                    .layout-main-section .section-body,
+                    .layout-main-section .section-head,
+                    .layout-main-section .form-column,
+                    .layout-main-section .form-group,
+                    .layout-main-section .frappe-control,
+                    .layout-main-section .control-input-wrapper,
+                    .layout-main-section .control-input,
+                    .layout-main-section .input-with-feedback,
+                    .layout-main-section .form-control,
+                    .layout-main-section .tab-pane,
+                    .layout-main-section .nav-link,
+                    .layout-main-section .nav-item,
+                    .layout-main-section .grid-field,
+                    .layout-main-section .form-grid-container,
+                    .layout-main-section .form-grid,
+                    .layout-main-section .grid-heading-row,
+                    .layout-main-section .grid-body,
+                    .layout-main-section .grid-footer,
+                    .layout-main-section .timeline-item,
+                    .layout-main-section .timeline-content,
+                    .layout-main-section .comment-box,
+                    .layout-main-section .comment-input-wrapper {
                         background-color: ${colorValue} !important;
-                    }
-                `;
-            } else if (type === 'border') {
-                styles = `
-                    .page-body, .page-wrapper, .page-content, .layout-main,
-                    .layout-main-section-wrapper, .layout-main-section,
-                    .form-layout, .form-page, .form-tabs-list, .form-tab-content,
-                    .form-section, .card-section, .section-body, .section-head,
-                    .form-column, .form-group, .frappe-control,
-                    .control-input-wrapper, .control-input,
-                    .input-with-feedback, .form-control,
-                    .tab-pane, .nav-link, .nav-item,
-                    .grid-field, .form-grid-container, .form-grid,
-                    .grid-heading-row, .grid-body, .grid-footer,
-                    .timeline-item, .timeline-content,
-                    .comment-box, .comment-input-wrapper {
-                        border: 1px solid ${colorValue} !important;
+                        border: 1px solid transparent !important;
                     }
                 `;
             } else if (type === 'font') {
                 styles = `
-                    .page-body, .page-wrapper, .page-content, .layout-main,
-                    .layout-main-section-wrapper, .layout-main-section,
-                    .form-layout, .form-page, .form-tabs-list, .form-tab-content,
-                    .form-section, .card-section, .section-body, .section-head,
-                    .form-column, .form-group, .frappe-control,
-                    .control-input-wrapper, .control-input,
-                    .input-with-feedback, .form-control,
-                    .tab-pane, .nav-link, .nav-item,
-                    .grid-field, .form-grid-container, .form-grid,
-                    .grid-heading-row, .grid-body, .grid-footer,
-                    .timeline-item, .timeline-content,
-                    .comment-box, .comment-input-wrapper,
-                    .page-body *, .page-wrapper *, .page-content *, .layout-main *,
-                    .layout-main-section-wrapper *, .layout-main-section *,
-                    .form-layout *, .form-page *, .form-tabs-list *, .form-tab-content *,
-                    .form-section *, .card-section *, .section-body *, .section-head *,
-                    .form-column *, .form-group *, .frappe-control *,
-                    .control-input-wrapper *, .control-input *,
-                    .input-with-feedback *, .form-control *,
-                    .tab-pane *, .nav-link *, .nav-item *,
-                    .grid-field *, .form-grid-container *, .form-grid *,
-                    .grid-heading-row *, .grid-body *, .grid-footer *,
-                    .timeline-item *, .timeline-content *,
-                    .comment-box *, .comment-input-wrapper * {
+                    .layout-main-section .form-layout,
+                    .layout-main-section .form-page,
+                    .layout-main-section .form-tabs-list,
+                    .layout-main-section .form-tab-content,
+                    .layout-main-section .form-section,
+                    .layout-main-section .card-section,
+                    .layout-main-section .section-body,
+                    .layout-main-section .section-head,
+                    .layout-main-section .form-column,
+                    .layout-main-section .form-group,
+                    .layout-main-section .frappe-control,
+                    .layout-main-section .control-input-wrapper,
+                    .layout-main-section .control-input,
+                    .layout-main-section .input-with-feedback,
+                    .layout-main-section .form-control,
+                    .layout-main-section .tab-pane,
+                    .layout-main-section .nav-link,
+                    .layout-main-section .nav-item,
+                    .layout-main-section .grid-field,
+                    .layout-main-section .form-grid-container,
+                    .layout-main-section .form-grid,
+                    .layout-main-section .grid-heading-row,
+                    .layout-main-section .grid-body,
+                    .layout-main-section .grid-footer,
+                    .layout-main-section .timeline-item,
+                    .layout-main-section .timeline-content,
+                    .layout-main-section .comment-box,
+                    .layout-main-section .comment-input-wrapper,
+                    .layout-main-section .form-layout *,
+                    .layout-main-section .form-page *,
+                    .layout-main-section .form-tabs-list *,
+                    .layout-main-section .form-tab-content *,
+                    .layout-main-section .form-section *,
+                    .layout-main-section .card-section *,
+                    .layout-main-section .section-body *,
+                    .layout-main-section .section-head *,
+                    .layout-main-section .form-column *,
+                    .layout-main-section .form-group *,
+                    .layout-main-section .frappe-control *,
+                    .layout-main-section .control-input-wrapper *,
+                    .layout-main-section .control-input *,
+                    .layout-main-section .input-with-feedback *,
+                    .layout-main-section .form-control *,
+                    .layout-main-section .tab-pane *,
+                    .layout-main-section .nav-link *,
+                    .layout-main-section .nav-item *,
+                    .layout-main-section .grid-field *,
+                    .layout-main-section .form-grid-container *,
+                    .layout-main-section .form-grid *,
+                    .layout-main-section .grid-heading-row *,
+                    .layout-main-section .grid-body *,
+                    .layout-main-section .grid-footer *,
+                    .layout-main-section .timeline-item *,
+                    .layout-main-section .timeline-content *,
+                    .layout-main-section .comment-box *,
+                    .layout-main-section .comment-input-wrapper * {
                         color: ${colorValue} !important;
+                        border: 1px solid transparent !important;
                     }
                 `;
             }
@@ -2447,16 +2478,6 @@ function loadSavedColor() {
             }
         }
 
-        const savedFormContentBorder = localStorage.getItem('formContentBorder');
-        if (savedFormContentBorder) {
-            applyFormContentStyles(savedFormContentBorder, 'border');
-            
-            // Mark the corresponding swatch as active
-            const activeFormBorderSwatch = document.querySelector(`[onclick="changeFormContentStyle('${savedFormContentBorder}', 'border')"]`);
-            if (activeFormBorderSwatch) {
-                activeFormBorderSwatch.classList.add('active');
-            }
-        }
 
         const savedFormContentFont = localStorage.getItem('formContentFont');
         if (savedFormContentFont) {

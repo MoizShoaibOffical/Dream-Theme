@@ -1,0 +1,99 @@
+<!-- Override ERPNext Login Template -->
+<div class="login-wrapper bg-img">
+    <div class="login-content">
+                    <form id="login-form" method="post">
+                        <div class="login-userset">
+                <div class="login-logo logo-normal">
+                    <img src="/assets/frappe/images/frappe-favicon.svg" alt="ERPNext" style="width: 60px; height: 60px;">
+                </div>
+                <div class="login-userheading">
+                    <h3>Sign In</h3>
+                    <h4>Access your ERPNext account using your email/username and password.</h4>
+                </div>
+                
+                <!-- Email/Username Field -->
+                <div class="form-login mb-3">
+                    <label class="form-label">Email or Username</label>
+                    <div class="form-addons">
+                        <input type="text" name="usr" class="form-control" placeholder="Enter your email or username" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                
+                <!-- Password Field -->
+                <div class="form-login mb-3">
+                    <label class="form-label">Password</label>
+                    <div class="pass-group">
+                        <input type="password" name="pwd" class="pass-input form-control" placeholder="Enter your password" required>
+                        <span class="fas toggle-password fa-eye-slash"></span>
+                    </div>
+                </div>
+                
+                <!-- Remember Me & Forgot Password -->
+                <div class="form-login authentication-check">
+                    <div class="row">
+                        <div class="col-12 d-flex align-items-center justify-content-between">
+                            <div class="custom-control custom-checkbox">
+                                <label class="checkboxs ps-4 mb-0 pb-0 line-height-1">
+                                    <input type="checkbox" name="remember" class="form-control">
+                                    <span class="checkmarks"></span>Remember me
+                                </label>
+                            </div>
+                            <div class="text-end">
+                                <a class="forgot-link" href="/app/forgot-password">Forgot Password?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Login Button -->
+                <div class="form-login">
+                    <button type="submit" class="btn btn-login">Sign In</button>
+                </div>
+                
+                <!-- Sign Up Link -->
+                <div class="signinform">
+                    <h4>New to ERPNext? <a href="/app/signup" class="hover-a">Create an account</a></h4>
+                </div>
+                
+                <!-- Social Login -->
+                <div class="form-setlogin or-text">
+                    <h4>OR</h4>
+                </div>
+                <div class="form-sociallink">
+                    <ul class="d-flex">
+                        <li>
+                            <a href="javascript:void(0);" class="facebook-logo">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="google-logo">
+                                <i class="fab fa-google"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="apple-logo">
+                                <i class="fab fa-apple"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
+                        <p>Copyright &copy; 2024 ERPNext. All rights reserved</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Right Side Image Section -->
+    <div class="login-image-section">
+        <div class="login-image-content">
+            <h2>Welcome to ERPNext</h2>
+            <p>Streamline your business operations with our comprehensive ERP solution. Manage everything from accounting to inventory in one place.</p>
+            <div class="image-placeholder">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+</div>

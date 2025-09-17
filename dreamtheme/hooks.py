@@ -29,6 +29,15 @@ app_include_css = "/assets/dreamtheme/css/gear-button.css"
 app_include_js = "/assets/dreamtheme/js/gear-button.js"
 
 # include js, css files in header of web template
+web_include_css = "/assets/dreamtheme/css/login.css"
+web_include_js = "/assets/dreamtheme/js/login.js"
+
+# Override login page
+override_doctype_class = {
+    "Login": "dreamtheme.www.login.CustomLogin"
+}
+
+# include js, css files in header of web template
 # web_include_css = "/assets/dreamtheme/css/dreamtheme.css"
 # web_include_js = "/assets/dreamtheme/js/dreamtheme.js"
 
@@ -57,7 +66,7 @@ app_include_js = "/assets/dreamtheme/js/gear-button.js"
 # ----------
 
 # application home page (will override Website Settings)
-# home_page = "login"
+home_page = "login"
 
 # website user home page (by Role)
 # role_home_page = {
