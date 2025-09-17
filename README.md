@@ -1,41 +1,55 @@
-### Dream Theme
+# Dream Theme - Floating Gear Button
 
-Dream Theme
+A beautiful floating gear button for ERPNext that provides quick access to settings and customization options.
 
-### Installation
+## Features
 
-You can install this app using the [bench](https://github.com/frappe/bench) CLI:
+- **Floating Gear Button**: A stylish blue circular button that appears on the top-right corner of your ERPNext interface
+- **Quick Settings Panel**: Click the gear button to access various settings:
+  - Dark Mode toggle
+  - Compact View toggle  
+  - Auto Refresh toggle
+  - Notifications toggle
+- **Smooth Animations**: Beautiful hover effects and smooth transitions
+- **Responsive Design**: Works perfectly on desktop and mobile devices
+- **Persistent Settings**: Your preferences are saved in localStorage
 
-```bash
-cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app dreamtheme
-```
+## Installation
 
-### Contributing
+1. The gear button is automatically included when you install the dreamtheme app
+2. Run `bench build --app dreamtheme` to compile assets
+3. Restart your bench with `bench restart` or `bench start`
 
-This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:
+## Usage
 
-```bash
-cd apps/dreamtheme
-pre-commit install
-```
+1. Look for the blue circular gear button (⚙) on the top-right corner of your ERPNext interface
+2. Click on it to open the settings panel
+3. Toggle various options as needed:
+   - **Dark Mode**: Switch between light and dark themes
+   - **Compact View**: Enable compact layout for better space utilization
+   - **Auto Refresh**: Automatically refresh dashboard elements every 30 seconds
+   - **Notifications**: Enable/disable browser notifications
 
-Pre-commit is configured to use the following tools for checking and formatting your code:
+## Customization
 
-- ruff
-- eslint
-- prettier
-- pyupgrade
+The gear button styles can be customized by modifying the CSS file:
+- File: `apps/dreamtheme/dreamtheme/public/css/gear-button.css`
+- You can change colors, size, position, and animations
 
-### CI
+## Technical Details
 
-This app can use GitHub Actions for CI. The following workflows are configured:
+- **CSS File**: `gear-button.css` - Contains all styling for the button and settings panel
+- **JavaScript File**: `gear-button.js` - Handles functionality and user interactions
+- **Hooks**: Updated `hooks.py` to include the CSS and JS files in the ERPNext interface
 
-- CI: Installs this app and runs unit tests on every push to `develop` branch.
-- Linters: Runs [Frappe Semgrep Rules](https://github.com/frappe/semgrep-rules) and [pip-audit](https://pypi.org/project/pip-audit/) on every pull request.
+## Browser Support
 
+- Chrome/Chromium
+- Firefox
+- Safari
+- Edge
+- Mobile browsers
 
-### License
+## License
 
-mit
+MIT License - Feel free to modify and use as needed.
