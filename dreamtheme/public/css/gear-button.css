@@ -1,10 +1,10 @@
 /* Floating Gear Button Styles */
 .floating-gear-button {
     position: fixed !important;
-    top: 20px !important;
+    top: 80px !important;
     right: 20px !important;
-    width: 60px !important;
-    height: 60px !important;
+    width: 50px !important;
+    height: 50px !important;
     background: linear-gradient(135deg, #ff0000, #cc0000) !important;
     border-radius: 50% !important;
     border: none !important;
@@ -20,6 +20,19 @@
     opacity: 1 !important;
 }
 
+/* Apply margin to page header content on ALL pages */
+.page-head-content {
+    margin-left: 40px !important;
+    max-width: calc(100% - 40px) !important;
+}
+
+/* Apply margin to specific elements on ALL pages */
+.row.flex.align-center.page-head-content {
+    margin-left: 40px !important;
+    max-width: calc(100% - 40px) !important;
+}
+
+
 .floating-gear-button:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 25px rgba(0, 123, 255, 0.4);
@@ -28,7 +41,7 @@
 
 .floating-gear-button .gear-icon {
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     transition: transform 0.3s ease;
 }
 
@@ -338,7 +351,6 @@
     color: #333333 !important;
 }
 
-
 /* Text Color Options */
 .text-color-section, .icon-color-section {
     margin-bottom: 15px;
@@ -536,163 +548,6 @@
     font-weight: 500;
 }
 
-/* Navbar Layout Previews */
-.default-preview::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    height: 6px;
-    background: #007bff;
-    border-radius: 2px;
-}
-
-.default-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 2px;
-    right: 2px;
-    height: 4px;
-    background: #6c757d;
-    border-radius: 2px;
-}
-
-.compact-preview::before {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 2px;
-    right: 2px;
-    height: 4px;
-    background: #28a745;
-    border-radius: 1px;
-}
-
-.compact-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 3px;
-    left: 2px;
-    right: 2px;
-    height: 2px;
-    background: #6c757d;
-    border-radius: 1px;
-}
-
-.glass-preview {
-    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.glass-preview::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    height: 6px;
-    background: rgba(0, 123, 255, 0.7);
-    border-radius: 2px;
-}
-
-.glass-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 2px;
-    right: 2px;
-    height: 4px;
-    background: rgba(108, 117, 125, 0.7);
-    border-radius: 2px;
-}
-
-.minimal-preview {
-    background: #ffffff;
-    border: 1px solid #e9ecef;
-}
-
-.minimal-preview::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 3px;
-    right: 3px;
-    height: 3px;
-    background: #495057;
-    border-radius: 0;
-}
-
-.minimal-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    left: 3px;
-    right: 3px;
-    height: 2px;
-    background: #adb5bd;
-    border-radius: 0;
-}
-
-.modern-preview {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-}
-
-.modern-preview::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 3px;
-}
-
-.modern-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 2px;
-    right: 2px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 3px;
-}
-
-.dashboard-preview {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.dashboard-preview::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    height: 5px;
-    background: #007bff;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.dashboard-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 2px;
-    right: 2px;
-    height: 3px;
-    background: #6c757d;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
 /* Main Content Layout Previews */
 .card-preview {
     background: #ffffff;
@@ -778,4 +633,849 @@
 .text-red {
     background-color: #dc3545 !important;
     border: 2px solid #ffffff !important;
+}
+
+/* ===== MODERN ENHANCED NAVBAR STYLES ===== */
+
+/* Main Header - Force height with multiple selectors */
+.header, .main-header, .layout-top-section, .navbar, .navbar-expand-lg, .navbar-container {
+    padding: 15px 30px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e9ecef !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    min-height: 65px !important;
+    height: 65px !important;
+    max-height: 65px !important;
+    gap: 20px !important;
+    flex-wrap: nowrap !important;
+    vertical-align: middle !important;
+}
+
+/* Ensure all navbar elements are vertically centered - be more specific */
+.layout-top-section .navbar-nav,
+.navbar .navbar-nav,
+.navbar .navbar-brand,
+.navbar .form-control,
+.navbar .btn,
+.navbar .nav-item,
+.navbar .nav-link {
+    vertical-align: middle !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+
+/* Show dropdown buttons and nav items */
+.navbar .dropdown,
+.navbar .nav-item,
+.navbar .nav-link,
+.navbar .btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Only show dropdown menus when active */
+.navbar .dropdown.show .dropdown-menu,
+.navbar .dropdown-menu.show {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Force height on all possible navbar elements */
+.layout-top-section .container,
+.layout-top-section .container-fluid,
+.layout-top-section .row,
+.navbar .container,
+.navbar .container-fluid,
+.navbar .row {
+    min-height: 65px !important;
+    height: 65px !important;
+    max-height: 65px !important;
+}
+
+/* Nuclear option - force height on everything */
+[class*="navbar"],
+[class*="header"],
+[class*="top-section"],
+[class*="layout-top"] {
+    min-height: 65px !important;
+    height: 65px !important;
+    max-height: 65px !important;
+}
+
+/* Target specific ERPNext classes */
+.navbar-expand-lg,
+.navbar-nav,
+.navbar-brand,
+.navbar-toggler {
+    min-height: 65px !important;
+    height: 65px !important;
+    max-height: 65px !important;
+}
+
+/* Left section - Logo */
+.header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    flex-shrink: 0 !important;
+    height: 100% !important;
+}
+
+/* Hide only duplicate search bars, keep main search functional */
+.header-left .form-control:not([id*="navbar-search"]),
+.header-left input[type="text"]:not([id*="navbar-search"]),
+.header-left .search-input:not([id*="navbar-search"]),
+.header-left .top-nav-search:not([id*="navbar-search"]),
+.header-left .nav-searchinputs:not([id*="navbar-search"]),
+.header-left .responsive-search:not([id*="navbar-search"]),
+.header-left .dropdown:not([id*="navbar-search"]),
+.header-left .searchinputs:not([id*="navbar-search"]) {
+    display: none !important;
+}
+
+/* Hide any search elements in header-left area except main search */
+.header-left *[class*="search"]:not([id*="navbar-search"]),
+.header-left *[placeholder*="Search"]:not([id*="navbar-search"]) {
+    display: none !important;
+}
+
+/* Keep main search bar functional - only hide duplicates */
+input[type="text"].form-control[placeholder="Search..."]:not([id*="navbar-search"]) {
+    display: none !important;
+}
+
+/* Keep main search functional */
+.form-control[placeholder="Search..."]:not([id*="navbar-search"]) {
+    display: none !important;
+}
+
+/* Keep main search bar visible and functional */
+#navbar-search,
+input[id*="navbar-search"],
+.form-control[id*="navbar-search"],
+.navbar-search,
+.navbar .form-control[placeholder*="Search"],
+.navbar input[type="text"][placeholder*="Search"],
+input[placeholder*="Search"],
+.form-control[placeholder*="Search"],
+.search-bar input,
+.form-inline input {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: text !important;
+    position: relative !important;
+    z-index: 10 !important;
+    background: #f8f9fa !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 0.375rem !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    color: #495057 !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+/* Ensure search bar is always clickable and functional */
+.navbar .form-control[placeholder*="Search"]:focus,
+.navbar input[type="text"][placeholder*="Search"]:focus,
+#navbar-search:focus,
+input[placeholder*="Search"]:focus,
+.form-control[placeholder*="Search"]:focus,
+.search-bar input:focus,
+.form-inline input:focus {
+    outline: none !important;
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    background: #ffffff !important;
+}
+
+/* Make sure search bar container is also functional */
+.navbar-center,
+.navbar .navbar-center,
+.layout-top-section .navbar-center {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Increase logo size in navbar */
+.navbar-brand,
+.navbar .navbar-brand,
+.layout-top-section .navbar-brand,
+.navbar .logo,
+.navbar img[src*="logo"],
+.navbar img[alt*="logo"],
+.navbar img[alt*="Logo"],
+.navbar img[title*="logo"],
+.navbar img[title*="Logo"] {
+    height: 60px !important;
+    width: auto !important;
+    max-height: 60px !important;
+    max-width: 200px !important;
+    object-fit: contain !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Logo hover effect */
+.navbar-brand:hover,
+.navbar .navbar-brand:hover,
+.layout-top-section .navbar-brand:hover {
+    transform: scale(1.05) !important;
+}
+
+/* Ensure logo container has proper spacing */
+.navbar .navbar-brand,
+.layout-top-section .navbar-brand {
+    padding: 10px 15px !important;
+    margin-right: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Center section - Search bar */
+.navbar-center {
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    height: 100% !important;
+}
+
+/* Right section - Actions */
+.navbar-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-shrink: 0 !important;
+    height: 100% !important;
+}
+
+/* Logo styling */
+.header-left .logo {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: #495057 !important;
+}
+
+.header-left .logo img {
+    max-height: 35px !important;
+    max-width: 150px !important;
+    object-fit: contain !important;
+}
+
+/* Main search bar */
+.search-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.search-container .form-control {
+    padding: 12px 20px !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 8px !important;
+    background: #f8f9fa !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    height: 45px !important;
+    color: #495057 !important;
+    vertical-align: middle !important;
+}
+
+.search-container .form-control:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    outline: none !important;
+}
+
+.search-container .form-control::placeholder {
+    color: #6c757d !important;
+}
+
+/* Add New Button - Temporarily Hidden */
+.add-new-btn,
+.btn-primary,
+.btn[class*="btn-primary"],
+button[class*="Add New"],
+button:contains("Add New"),
+.btn-md,
+.d-inline-flex {
+    display: none !important;
+}
+
+.add-new-btn:hover {
+    background: #0056b3 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.add-new-btn i {
+    font-size: 14px !important;
+}
+
+/* Action buttons container */
+.action-buttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    height: 100% !important;
+}
+
+/* Fullscreen button - Temporarily Hidden */
+.fullscreen-btn,
+#btnFullscreen,
+button[title="Fullscreen"],
+button[class*="fullscreen"],
+.btn[class*="fullscreen"] {
+    display: none !important;
+}
+
+.fullscreen-btn:hover {
+    background: #f8f9fa !important;
+    border-color: #007bff !important;
+    color: #007bff !important;
+}
+
+/* Notification button - HIDDEN as requested */
+.notification-btn,
+#notification-btn {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+}
+
+/* Layout Style section removed - no layout styles needed */
+
+
+.notification-badge {
+    position: absolute !important;
+    top: -2px !important;
+    right: -2px !important;
+    background: #dc3545 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold !important;
+}
+
+/* Help dropdown */
+.help-dropdown {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 8px !important;
+    background: white !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    color: #495057 !important;
+    font-size: 14px !important;
+    height: 45px !important;
+    vertical-align: middle !important;
+}
+
+.help-dropdown:hover {
+    background: #f8f9fa !important;
+    border-color: #007bff !important;
+    color: #007bff !important;
+}
+
+.help-dropdown i {
+    font-size: 12px !important;
+}
+
+/* Profile button */
+.profile-btn {
+    width: 45px !important;
+    height: 45px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: #dc3545 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+    vertical-align: middle !important;
+}
+
+.profile-btn:hover {
+    background: #c82333 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+}
+
+.profile-btn i {
+    font-size: 18px !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .header, .main-header {
+        padding: 10px 15px !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .navbar-center {
+        order: 3 !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+    }
+    
+    .action-buttons {
+        gap: 8px !important;
+    }
+    
+    .fullscreen-btn,
+    .notification-btn {
+        width: 35px !important;
+        height: 35px !important;
+    }
+    
+    .profile-btn {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+/* Hide Add New button but keep fullscreen */
+.header .nav-item.link-nav,
+.main-header .nav-item.link-nav {
+    display: none !important;
+}
+
+/* Show fullscreen button */
+.header #btnFullscreen,
+.main-header #btnFullscreen,
+.header .fullscreen-btn,
+.main-header .fullscreen-btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Hide message/chat icon */
+.navbar .nav-item[title*="message"],
+.navbar .nav-item[title*="chat"],
+.navbar .nav-item[title*="Message"],
+.navbar .nav-item[title*="Chat"],
+.navbar .nav-link[title*="message"],
+.navbar .nav-link[title*="chat"],
+.navbar .nav-link[title*="Message"],
+.navbar .nav-link[title*="Chat"],
+.navbar .nav-item i[class*="message"],
+.navbar .nav-item i[class*="chat"],
+.navbar .nav-item i[class*="Message"],
+.navbar .nav-item i[class*="Chat"],
+.navbar .nav-link i[class*="message"],
+.navbar .nav-link i[class*="chat"],
+.navbar .nav-link i[class*="Message"],
+.navbar .nav-link i[class*="Chat"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Target specific message icon classes */
+.navbar .nav-item .fa-comment,
+.navbar .nav-item .fa-comments,
+.navbar .nav-item .fa-message,
+.navbar .nav-item .fa-chat,
+.navbar .nav-link .fa-comment,
+.navbar .nav-link .fa-comments,
+.navbar .nav-link .fa-message,
+.navbar .nav-link .fa-chat {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Hide message icon by targeting the specific element */
+.navbar .nav-item:nth-child(2),
+.navbar .nav-link:nth-child(2),
+.navbar .nav-item[data-original-title*="message"],
+.navbar .nav-item[data-original-title*="chat"],
+.navbar .nav-link[data-original-title*="message"],
+.navbar .nav-link[data-original-title*="chat"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Force show fullscreen button */
+.navbar .nav-item[title*="fullscreen"],
+.navbar .nav-item[title*="Fullscreen"],
+.navbar .nav-link[title*="fullscreen"],
+.navbar .nav-link[title*="Fullscreen"],
+.navbar .nav-item[data-original-title*="fullscreen"],
+.navbar .nav-item[data-original-title*="Fullscreen"],
+.navbar .nav-link[data-original-title*="fullscreen"],
+.navbar .nav-link[data-original-title*="Fullscreen"] {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Remove the broad selector that was causing multiple icons */
+
+/* Target the actual fullscreen button from theme app */
+#btnFullscreen,
+.navbar #btnFullscreen,
+.nav-item #btnFullscreen,
+.nav-item-box #btnFullscreen {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+    background: none !important;
+    border: none !important;
+    position: relative !important;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+#btnFullscreen i,
+.navbar #btnFullscreen i,
+.nav-item #btnFullscreen i,
+.nav-item-box #btnFullscreen i {
+    display: none !important;
+}
+
+#btnFullscreen::before,
+.navbar #btnFullscreen::before,
+.nav-item #btnFullscreen::before,
+.nav-item-box #btnFullscreen::before {
+    content: "" !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-image: url('https://cdn-icons-png.freepik.com/512/8373/8373465.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    display: block !important;
+    filter: var(--icon-filter, brightness(0) saturate(100%) invert(1)) !important;
+    transition: filter 0.3s ease !important;
+}
+
+/* Custom fullscreen icon styles */
+.custom-fullscreen-icon {
+    display: none !important;
+}
+
+/* Fullscreen button container next to search bar */
+.fullscreen-button-container {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: 10px !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+/* Force visibility */
+.fullscreen-button-container,
+.fullscreen-btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Simple fullscreen button styles */
+#btnFullscreen {
+    width: 35px !important;
+    height: 35px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 4px !important;
+    color: white !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 10px !important;
+    vertical-align: middle !important;
+    transition: all 0.3s ease !important;
+}
+
+#btnFullscreen:hover {
+    background: transparent !important;
+    transform: scale(1.1) !important;
+}
+
+#btnFullscreen::before {
+    content: "" !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-image: url('https://cdn-icons-png.freepik.com/512/8373/8373465.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    display: block !important;
+    filter: brightness(0) invert(1) !important;
+}
+
+.fullscreen-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+    background: none !important;
+    border: 1px solid #e9ecef !important;
+    position: relative !important;
+    padding: 0 !important;
+}
+
+.fullscreen-btn::before {
+    content: "" !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-image: url('https://cdn-icons-png.freepik.com/512/8373/8373465.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    display: block !important;
+    filter: var(--icon-filter, brightness(0) saturate(100%) invert(1)) !important;
+    transition: filter 0.3s ease !important;
+}
+
+.fullscreen-btn:hover {
+    background-color: #f8f9fa !important;
+    transform: scale(1.1) !important;
+    border-color: transparent !important;
+}
+
+.fullscreen-btn:hover::before {
+    filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+.nav-item:has(.custom-fullscreen-icon)::before {
+    content: "" !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-image: url('https://cdn-icons-png.freepik.com/512/8373/8373465.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    display: block !important;
+    filter: var(--icon-filter, brightness(0) saturate(100%) invert(1)) !important;
+    transition: filter 0.3s ease !important;
+}
+
+.nav-item:has(.custom-fullscreen-icon) {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+    background: none !important;
+    border: none !important;
+    position: relative !important;
+}
+
+.nav-item:has(.custom-fullscreen-icon):hover {
+    background-color: #f8f9fa !important;
+    transform: scale(1.1) !important;
+}
+
+.nav-item:has(.custom-fullscreen-icon):hover::before {
+    filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+#btnFullscreen:hover,
+.navbar #btnFullscreen:hover,
+.nav-item #btnFullscreen:hover,
+.nav-item-box #btnFullscreen:hover {
+    background-color: #f8f9fa !important;
+    transform: scale(1.1) !important;
+}
+
+#btnFullscreen:hover::before,
+.navbar #btnFullscreen:hover::before,
+.nav-item #btnFullscreen:hover::before,
+.nav-item-box #btnFullscreen:hover::before {
+    filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+/* Dynamic color based on background */
+.navbar .nav-item:nth-child(2) {
+    position: relative !important;
+}
+
+/* Light background - dark icon */
+.navbar[style*="background: #ffffff"],
+.navbar[style*="background: white"],
+.navbar[style*="background-color: #ffffff"],
+.navbar[style*="background-color: white"],
+.navbar[style*="background: #f8f9fa"],
+.navbar[style*="background-color: #f8f9fa"] .nav-item:nth-child(2)::before {
+    filter: brightness(0) saturate(100%) invert(0) !important;
+}
+
+/* Dark background - light icon */
+.navbar[style*="background: #000000"],
+.navbar[style*="background: black"],
+.navbar[style*="background-color: #000000"],
+.navbar[style*="background-color: black"],
+.navbar[style*="background: #333333"],
+.navbar[style*="background-color: #333333"],
+.navbar[style*="background: #2c3e50"],
+.navbar[style*="background-color: #2c3e50"] .nav-item:nth-child(2)::before {
+    filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+/* Medium background - contrast icon */
+.navbar[style*="background: #6c757d"],
+.navbar[style*="background-color: #6c757d"],
+.navbar[style*="background: #495057"],
+.navbar[style*="background-color: #495057"] .nav-item:nth-child(2)::before {
+    filter: brightness(0) saturate(100%) invert(1) !important;
+}
+
+/* Nuclear option - hide all speech bubble icons */
+.navbar .nav-item i[class*="comment"],
+.navbar .nav-item i[class*="message"],
+.navbar .nav-item i[class*="chat"],
+.navbar .nav-item i[class*="bubble"],
+.navbar .nav-link i[class*="comment"],
+.navbar .nav-link i[class*="message"],
+.navbar .nav-link i[class*="chat"],
+.navbar .nav-link i[class*="bubble"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Target the specific speech bubble icon */
+.navbar .nav-item:has(i[class*="comment"]),
+.navbar .nav-item:has(i[class*="message"]),
+.navbar .nav-item:has(i[class*="chat"]),
+.navbar .nav-item:has(i[class*="bubble"]),
+.navbar .nav-link:has(i[class*="comment"]),
+.navbar .nav-link:has(i[class*="message"]),
+.navbar .nav-link:has(i[class*="chat"]),
+.navbar .nav-link:has(i[class*="bubble"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Force hide chat/message icon completely */
+.navbar .nav-item:nth-child(3),
+.navbar .nav-link:nth-child(3),
+.navbar .nav-item[data-original-title*="message"],
+.navbar .nav-item[data-original-title*="chat"],
+.navbar .nav-item[data-original-title*="Message"],
+.navbar .nav-item[data-original-title*="Chat"],
+.navbar .nav-link[data-original-title*="message"],
+.navbar .nav-link[data-original-title*="chat"],
+.navbar .nav-link[data-original-title*="Message"],
+.navbar .nav-link[data-original-title*="Chat"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide any element with speech bubble icon */
+.navbar *[class*="comment"],
+.navbar *[class*="message"],
+.navbar *[class*="chat"],
+.navbar *[class*="bubble"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Hide specific SVG chat icon */
+.navbar .es-icon.icon-sm,
+.navbar svg.es-icon,
+.navbar .es-icon[class*="chat"],
+.navbar svg[class*="chat"],
+.navbar .es-icon[href*="chat"],
+.navbar svg[href*="chat"],
+.navbar .es-icon[href*="line-chat"],
+.navbar svg[href*="line-chat"],
+.navbar .es-icon[href*="chat-alt"],
+.navbar svg[href*="chat-alt"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide parent elements containing chat SVG */
+.navbar .nav-item:has(.es-icon[href*="chat"]),
+.navbar .nav-item:has(svg[href*="chat"]),
+.navbar .nav-item:has(.es-icon[href*="line-chat"]),
+.navbar .nav-item:has(svg[href*="line-chat"]),
+.navbar .nav-item:has(.es-icon[href*="chat-alt"]),
+.navbar .nav-item:has(svg[href*="chat-alt"]),
+.navbar .nav-link:has(.es-icon[href*="chat"]),
+.navbar .nav-link:has(svg[href*="chat"]),
+.navbar .nav-link:has(.es-icon[href*="line-chat"]),
+.navbar .nav-link:has(svg[href*="line-chat"]),
+.navbar .nav-link:has(.es-icon[href*="chat-alt"]),
+.navbar .nav-link:has(svg[href*="chat-alt"]) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }

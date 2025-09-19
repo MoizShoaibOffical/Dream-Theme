@@ -1,353 +1,17 @@
 // Floating Gear Button JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 DreamTheme JavaScript loaded');
-    console.log('📍 Current URL:', window.location.href);
-    console.log('📍 Current pathname:', window.location.pathname);
-    console.log('📍 Body data-page-route:', document.body.getAttribute('data-page-route'));
-    console.log('📍 Body classes:', document.body.className);
-    
-    // Check if we're on workspace/dashboard route and hide page header content
-    const currentRoute = window.location.pathname;
-    const isWorkspaceRoute = currentRoute === '/app' || currentRoute === '/app/' || 
-                            document.body.getAttribute('data-page-route') === 'app' ||
-                            document.body.getAttribute('data-page-route') === '/app' ||
-                            document.body.getAttribute('data-page-route') === '/app/' ||
-                            currentRoute === '/workspace' || currentRoute === '/workspace/' ||
-                            document.body.getAttribute('data-page-route') === 'workspace' ||
-                            document.body.getAttribute('data-page-route') === '/workspace' ||
-                            document.body.getAttribute('data-page-route') === '/workspace/' ||
-                            currentRoute === '/dashboard' || currentRoute === '/dashboard/' ||
-                            document.body.getAttribute('data-page-route') === 'dashboard' ||
-                            document.body.getAttribute('data-page-route') === '/dashboard' ||
-                            document.body.getAttribute('data-page-route') === '/dashboard/' ||
-                            currentRoute === '/' || currentRoute === '/desk' || currentRoute === '/home' || 
-                            document.body.getAttribute('data-page-route') === 'home' ||
-                            document.body.getAttribute('data-page-route') === 'desk' ||
-                            document.body.classList.contains('home-page');
-    
-    console.log('🔍 Is workspace route:', isWorkspaceRoute);
-    
-    if (isWorkspaceRoute) {
-        console.log('🚫 Workspace route detected - hiding page header content');
-        hidePageHeaderContent();
-        // Try multiple times to ensure hiding
-        setTimeout(hidePageHeaderContent, 500);
-        setTimeout(hidePageHeaderContent, 1000);
-        setTimeout(hidePageHeaderContent, 2000);
-        // Don't return - continue to create buttons
-    }
-    
-    // Apply margin to page header content on all pages
-    applyPageHeaderMargin();
-    
-    // Apply margin multiple times to ensure it works
-    setTimeout(applyPageHeaderMargin, 100);
-    setTimeout(applyPageHeaderMargin, 500);
-    setTimeout(applyPageHeaderMargin, 1000);
-    setTimeout(applyPageHeaderMargin, 2000);
-    
-    // Continuous monitoring with MutationObserver
-    const marginObserver = new MutationObserver(() => {
-        applyPageHeaderMargin();
-    });
-    marginObserver.observe(document.body, { 
-        childList: true, 
-        subtree: true, 
-        attributes: true,
-        attributeFilter: ['class']
-    });
-    
-    // Create all buttons immediately
-    console.log('🔧 Creating gear button immediately...');
-    try {
-        createFloatingGearButton();
-        console.log('✅ Gear button creation completed');
-    } catch (e) {
-        console.error('❌ Gear button creation failed:', e);
-    }
-    
-    console.log('📺 Creating fullscreen button immediately...');
-    try {
-        createFullscreenButton();
-        console.log('✅ Fullscreen button creation completed');
-    } catch (e) {
-        console.error('❌ Fullscreen button creation failed:', e);
-    }
-    
-    // Remove existing notification button if any
-    const existingNotificationBtn = document.getElementById('notification-btn');
-    if (existingNotificationBtn) {
-        console.log('🗑️ Removing existing notification button');
-        existingNotificationBtn.remove();
-    }
-    
-    // Notification button removed as requested
-    console.log('🔔 Notification button creation skipped');
-    
     // Wait a bit for page to fully load
-    console.log('⏰ Starting additional button creation in 1000ms...');
     setTimeout(function() {
-        console.log('🔧 Creating gear button (attempt 2)...');
         createFloatingGearButton();
-        // Add navbar enhancements after gear button is created
-        setTimeout(function() {
-            console.log('🎨 Adding navbar enhancements...');
-            addNavbarEnhancements();
-            // Create fullscreen button with multiple attempts
-            console.log('📺 Creating fullscreen button...');
-            createFullscreenButton();
-            setTimeout(() => {
-                console.log('📺 Creating fullscreen button (attempt 2)...');
-                createFullscreenButton();
-            }, 1000);
-            setTimeout(() => {
-                console.log('📺 Creating fullscreen button (attempt 3)...');
-                createFullscreenButton();
-            }, 2000);
-            
-            // Notification button removed as requested
-            console.log('🔔 Notification button creation skipped');
-            // Ensure Add New and Fullscreen buttons are removed
-            try {
-                removeNavbarButtons();
-                // Observe for future DOM changes (SPA navigation)
-                const observer = new MutationObserver(() => {
-                    removeNavbarButtons();
-                    createFullscreenButton();
-                    // Notification button removed as requested
-                    
-                    // Apply default sidebar layout on DOM changes
-                    const defaultLayout = 'default';
-                    applySidebarLayoutStyles(defaultLayout);
-                    localStorage.setItem('sidebarLayout', defaultLayout);
-                });
-                observer.observe(document.body, { childList: true, subtree: true });
-            } catch (e) {
-                console.warn('Navbar button removal failed:', e);
-            }
-        }, 500);
     }, 1000);
 });
 
-// Function to hide page header content ONLY on workspace/dashboard routes
-function hidePageHeaderContent() {
-    // Check if we're actually on workspace/dashboard route
-    const currentRoute = window.location.pathname;
-    const isWorkspaceRoute = currentRoute === '/app' || currentRoute === '/app/' || 
-                            document.body.getAttribute('data-page-route') === 'app' ||
-                            document.body.getAttribute('data-page-route') === '/app' ||
-                            document.body.getAttribute('data-page-route') === '/app/' ||
-                            currentRoute === '/workspace' || currentRoute === '/workspace/' ||
-                            document.body.getAttribute('data-page-route') === 'workspace' ||
-                            document.body.getAttribute('data-page-route') === '/workspace' ||
-                            document.body.getAttribute('data-page-route') === '/workspace/' ||
-                            currentRoute === '/dashboard' || currentRoute === '/dashboard/' ||
-                            document.body.getAttribute('data-page-route') === 'dashboard' ||
-                            document.body.getAttribute('data-page-route') === '/dashboard' ||
-                            document.body.getAttribute('data-page-route') === '/dashboard/' ||
-                            currentRoute === '/' || currentRoute === '/desk' || currentRoute === '/home' || 
-                            document.body.getAttribute('data-page-route') === 'home' ||
-                            document.body.getAttribute('data-page-route') === 'desk' ||
-                            document.body.classList.contains('home-page');
-    
-    if (!isWorkspaceRoute) {
-        console.log('⚠️ Not on workspace route - skipping page header hiding');
-        return;
-    }
-    
-    // Try multiple selectors
-    const selectors = [
-        '.page-head-content',
-        '.row.flex.align-center.page-head-content',
-        '.page-head-content .col-md-4',
-        '.page-head-content .col-sm-6',
-        '.page-head-content .col-xs-7',
-        '.page-head-content .page-title',
-        '.page-head-content .sidebar-toggle-btn',
-        '.page-head-content .title-area',
-        '.page-head-content .title-text',
-        '.page-head-content .page-actions'
-    ];
-    
-    selectors.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(element => {
-            element.style.position = 'fixed';
-            element.style.top = '0';
-            element.style.left = '0';
-            element.style.right = '40px';
-            element.style.width = 'calc(100% - 40px)';
-            element.style.marginRight = '40px';
-            element.style.zIndex = '1000';
-            element.style.background = '#ffffff';
-            element.style.borderBottom = '1px solid #e9ecef';
-            element.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            element.style.display = 'flex';
-            element.style.visibility = 'visible';
-            element.style.opacity = '1';
-            element.style.height = '60px';
-            element.style.margin = '0';
-            element.style.padding = '0 20px';
-            element.style.alignItems = 'center';
-            element.style.justifyContent = 'space-between';
-        });
-    });
-    
-    console.log('✅ Page header content stretched to full width on workspace routes');
-}
-
-// Function to apply margin to page header content on ALL pages
-function applyPageHeaderMargin() {
-    console.log('🎯 Applying 40px margin to page header content on all pages...');
-    
-    // Try multiple approaches
-    const approaches = [
-        // Approach 1: Direct class targeting
-        () => {
-            const elements = document.querySelectorAll('.page-head-content, .row.flex.align-center.page-head-content');
-            elements.forEach(el => {
-                el.style.setProperty('margin-right', '40px', 'important');
-                el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-            });
-        },
-        
-        // Approach 2: Attribute targeting
-        () => {
-            const elements = document.querySelectorAll('[class*="page-head-content"]');
-            elements.forEach(el => {
-                el.style.setProperty('margin-right', '40px', 'important');
-                el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-            });
-        },
-        
-        // Approach 3: All divs with page-head
-        () => {
-            const elements = document.querySelectorAll('div[class*="page-head"]');
-            elements.forEach(el => {
-                el.style.setProperty('margin-right', '40px', 'important');
-                el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-            });
-        },
-        
-        // Approach 4: Force with CSS injection
-        () => {
-            const style = document.createElement('style');
-            style.textContent = `
-                .page-head-content,
-                .row.flex.align-center.page-head-content,
-                [class*="page-head-content"],
-                div[class*="page-head"],
-                *[class*="page-head"] {
-                    margin-right: 40px !important;
-                    max-width: calc(100% - 40px) !important;
-                    width: calc(100% - 40px) !important;
-                    box-sizing: border-box !important;
-                }
-            `;
-            document.head.appendChild(style);
-        },
-        
-        // Approach 5: Nuclear option - target all elements
-        () => {
-            const allElements = document.querySelectorAll('*');
-            allElements.forEach(el => {
-                if (el.className && typeof el.className === 'string' && el.className.includes('page-head')) {
-                    el.style.setProperty('margin-right', '40px', 'important');
-                    el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                    el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-                    el.style.setProperty('box-sizing', 'border-box', 'important');
-                }
-            });
-        }
-    ];
-    
-    // Execute all approaches
-    approaches.forEach(approach => {
-        try {
-            approach();
-        } catch (e) {
-            console.log('Approach failed:', e);
-        }
-    });
-    
-    console.log('✅ Page header content margin applied to all pages');
-    
-    // Debug: Log what elements were found
-    const debugElements = document.querySelectorAll('.page-head-content, [class*="page-head-content"]');
-    console.log('🔍 Found page-head elements:', debugElements.length);
-    debugElements.forEach((el, index) => {
-        console.log(`Element ${index}:`, el.className, el.style.marginRight);
-    });
-    
-    // Force apply to any visible page-head elements
-    try {
-        const allPageHeadElements = document.querySelectorAll('*');
-        allPageHeadElements.forEach(el => {
-            try {
-                if (el.className && typeof el.className === 'string' && el.className.includes('page-head') && el.offsetParent !== null) {
-                    console.log('🎯 Force applying margin to visible element:', el.className);
-                    el.style.marginRight = '40px';
-                    el.style.maxWidth = 'calc(100% - 40px)';
-                    el.style.width = 'calc(100% - 40px)';
-                    el.style.boxSizing = 'border-box';
-                }
-            } catch (e) {
-                console.log('Error processing element:', e);
-            }
-        });
-    } catch (e) {
-        console.log('Error in force apply:', e);
-    }
-}
-
-// Create notification button
-function createNotificationButton() {
-    // Check if notification button already exists
-    let notificationBtn = document.getElementById('notification-btn');
-    if (notificationBtn) {
-        console.log('Notification button already exists');
-        return;
-    }
-    
-    console.log('Creating notification button...');
-    
-    // Find navbar right section
-    const navbarRight = document.querySelector('.navbar-right, .navbar-nav, .navbar .nav');
-    if (!navbarRight) {
-        console.log('Navbar right section not found');
-        return;
-    }
-    
-    // Create notification button element
-    notificationBtn = document.createElement('button');
-    notificationBtn.id = 'notification-btn';
-    notificationBtn.className = 'notification-btn';
-    notificationBtn.title = 'Notifications';
-    notificationBtn.innerHTML = '<i class="fas fa-bell"></i>';
-    
-    // Add click event
-    notificationBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        console.log('🔔 Notification button clicked');
-        // Add notification functionality here
-    });
-    
-    // Add to navbar
-    navbarRight.appendChild(notificationBtn);
-    
-    console.log('✅ Notification button created');
-}
-
 function createFloatingGearButton() {
-    console.log('🔧 Creating floating gear button...');
+    console.log('Creating floating gear button...');
     
     // Remove existing button if any
     const existingButton = document.querySelector('.floating-gear-button');
     if (existingButton) {
-        console.log('🗑️ Removing existing gear button');
         existingButton.remove();
     }
     
@@ -428,11 +92,63 @@ function createFloatingGearButton() {
             </div>
             
             
-            <!-- REMOVED SECTIONS AS REQUESTED -->
-            <!-- Main Content Color section removed -->
-            <!-- Main Content Text Color section removed -->
+            <div class="theme-section">
+                <h6>Main Content Color</h6>
+                <div class="color-section">
+                    <label>Choose Color</label>
+                    <div class="color-swatches solid-colors">
+                        <div class="color-swatch white" data-color="white" onclick="changeMainContentColor('white')"></div>
+                        <div class="color-swatch light-green" data-color="lightgreen" onclick="changeMainContentColor('lightgreen')"></div>
+                        <div class="color-swatch dark-gray" data-color="darkgray" onclick="changeMainContentColor('darkgray')"></div>
+                        <div class="color-swatch black" data-color="black" onclick="changeMainContentColor('black')"></div>
+                        <div class="color-swatch blue" data-color="blue" onclick="changeMainContentColor('blue')"></div>
+                        <div class="color-swatch purple" data-color="purple" onclick="changeMainContentColor('purple')"></div>
+                        <div class="color-swatch teal" data-color="teal" onclick="changeMainContentColor('teal')"></div>
+                    </div>
+                </div>
+            </div>
             
-            <!-- Form Content Style section removed -->
+            <div class="theme-section">
+                <h6>Main Content Text Color</h6>
+                <div class="color-section">
+                    <label>Choose Text Color</label>
+                    <div class="color-swatches text-colors">
+                        <div class="color-swatch text-white" data-color="white-text" onclick="changeMainContentTextColor('white')"></div>
+                        <div class="color-swatch text-black" data-color="black-text" onclick="changeMainContentTextColor('black')"></div>
+                        <div class="color-swatch text-blue" data-color="blue-text" onclick="changeMainContentTextColor('blue')"></div>
+                        <div class="color-swatch text-green" data-color="green-text" onclick="changeMainContentTextColor('green')"></div>
+                        <div class="color-swatch text-purple" data-color="purple-text" onclick="changeMainContentTextColor('purple')"></div>
+                        <div class="color-swatch text-red" data-color="red-text" onclick="changeMainContentTextColor('red')"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="theme-section">
+                <h6>Form Content Style</h6>
+                <div class="color-section">
+                    <label>Background Color</label>
+                    <div class="color-swatches solid-colors">
+                        <div class="color-swatch white" data-color="white" onclick="changeFormContentStyle('white', 'background')"></div>
+                        <div class="color-swatch light-green" data-color="lightgreen" onclick="changeFormContentStyle('lightgreen', 'background')"></div>
+                        <div class="color-swatch dark-gray" data-color="darkgray" onclick="changeFormContentStyle('darkgray', 'background')"></div>
+                        <div class="color-swatch black" data-color="black" onclick="changeFormContentStyle('black', 'background')"></div>
+                        <div class="color-swatch blue" data-color="blue" onclick="changeFormContentStyle('blue', 'background')"></div>
+                        <div class="color-swatch purple" data-color="purple" onclick="changeFormContentStyle('purple', 'background')"></div>
+                        <div class="color-swatch teal" data-color="teal" onclick="changeFormContentStyle('teal', 'background')"></div>
+                    </div>
+                </div>
+                <div class="color-section">
+                    <label>Font Color</label>
+                    <div class="color-swatches text-colors">
+                        <div class="color-swatch text-white" data-color="white-text" onclick="changeFormContentStyle('white', 'font')"></div>
+                        <div class="color-swatch text-black" data-color="black-text" onclick="changeFormContentStyle('black', 'font')"></div>
+                        <div class="color-swatch text-blue" data-color="blue-text" onclick="changeFormContentStyle('blue', 'font')"></div>
+                        <div class="color-swatch text-green" data-color="green-text" onclick="changeFormContentStyle('green', 'font')"></div>
+                        <div class="color-swatch text-purple" data-color="purple-text" onclick="changeFormContentStyle('purple', 'font')"></div>
+                        <div class="color-swatch text-red" data-color="red-text" onclick="changeFormContentStyle('red', 'font')"></div>
+                    </div>
+                </div>
+            </div>
             
             <div class="theme-section">
                 <h6>Sidebar Color</h6>
@@ -587,7 +303,27 @@ function createFloatingGearButton() {
                         </div>
                     </div>
                 </div>
-                <!-- Layout Style section removed as requested -->
+                <div class="layout-section">
+                    <label>Layout Style</label>
+                    <div class="layout-options">
+                        <div class="layout-option active" data-layout="default" onclick="changeSidebarLayout('default')">
+                            <div class="layout-preview default-layout"></div>
+                            <span>Default</span>
+                        </div>
+                        <div class="layout-option" data-layout="modern" onclick="changeSidebarLayout('modern')">
+                            <div class="layout-preview modern-layout"></div>
+                            <span>Modern</span>
+                        </div>
+                        <div class="layout-option" data-layout="compact" onclick="changeSidebarLayout('compact')">
+                            <div class="layout-preview compact-layout"></div>
+                            <span>Compact</span>
+                        </div>
+                        <div class="layout-option" data-layout="spacious" onclick="changeSidebarLayout('spacious')">
+                            <div class="layout-preview spacious-layout"></div>
+                            <span>Spacious</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
@@ -886,6 +622,561 @@ function applyTopBarStyles(color) {
             }
         `;
     }
+            
+            /* Animated background particles effect */
+            .navbar::before, .top-bar::before, .header::before, .layout-top-section::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: -100% !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: linear-gradient(90deg, transparent, ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}, transparent) !important;
+                animation: shimmer 3s infinite !important;
+                z-index: 0 !important;
+            }
+            
+            @keyframes shimmer {
+                0% { left: -100%; }
+                100% { left: 100%; }
+            }
+            
+            /* All navbar elements - comprehensive coverage */
+            .layout-top-section *, .layout-top-section .navbar *,
+            .layout-top-section .navbar-brand, .layout-top-section .navbar-nav,
+            .layout-top-section .navbar-toggler, .layout-top-section .navbar-nav a,
+            .layout-top-section .navbar-nav span, .layout-top-section .navbar-nav div,
+            .layout-top-section .navbar-nav .nav-link, .layout-top-section .navbar-nav .dropdown-toggle,
+            .layout-top-section .navbar-nav i, .layout-top-section .navbar-nav svg,
+            .layout-top-section .navbar-nav .btn, .layout-top-section .navbar-nav .form-control,
+            .layout-top-section .navbar-nav .nav-item, .layout-top-section .navbar-nav .nav-item a,
+            .layout-top-section .navbar-nav .nav-item span, .layout-top-section .navbar-nav .nav-item div,
+            .layout-top-section .navbar-nav .nav-item i, .layout-top-section .navbar-nav .nav-item svg,
+            .layout-top-section .navbar-nav .dropdown-menu, .layout-top-section .navbar-nav .dropdown-item,
+            .layout-top-section .navbar-nav .dropdown-item a, .layout-top-section .navbar-nav .dropdown-item span,
+            .layout-top-section .navbar-nav .dropdown-item i, .layout-top-section .navbar-nav .dropdown-item svg,
+            .layout-top-section .navbar-nav .form-control, .layout-top-section .navbar-nav .form-control::placeholder,
+            .layout-top-section .navbar-nav .btn, .layout-top-section .navbar-nav .btn i,
+            .layout-top-section .navbar-nav .btn span, .layout-top-section .navbar-nav .btn svg,
+            .layout-top-section .navbar-nav .user-menu, .layout-top-section .navbar-nav .user-menu *,
+            .layout-top-section .navbar-nav .user-menu a, .layout-top-section .navbar-nav .user-menu span,
+            .layout-top-section .navbar-nav .user-menu i, .layout-top-section .navbar-nav .user-menu svg,
+            .layout-top-section .navbar-nav .avatar, .layout-top-section .navbar-nav .full-name {
+                color: ${textColor} !important; 
+                border-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+            }
+            
+            /* Enhanced hover effects with animations */
+            .layout-top-section .navbar-nav .nav-link,
+            .layout-top-section .navbar-nav .dropdown-toggle,
+            .layout-top-section .navbar-nav .nav-item a {
+                position: relative !important;
+                transition: all 0.3s ease !important;
+                z-index: 1 !important;
+            }
+            
+            .layout-top-section .navbar-nav .nav-link::after,
+            .layout-top-section .navbar-nav .dropdown-toggle::after,
+            .layout-top-section .navbar-nav .nav-item a::after {
+                content: '' !important;
+                position: absolute !important;
+                bottom: -5px !important;
+                left: 50% !important;
+                width: 0 !important;
+                height: 2px !important;
+                background: linear-gradient(90deg, ${textColor === '#ffffff' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'}, ${textColor === '#ffffff' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'}) !important;
+                transition: all 0.3s ease !important;
+                transform: translateX(-50%) !important;
+                border-radius: 2px !important;
+            }
+            
+            .layout-top-section .navbar-nav .nav-link:hover,
+            .layout-top-section .navbar-nav .dropdown-toggle:hover,
+            .layout-top-section .navbar-nav .nav-item:hover,
+            .layout-top-section .navbar-nav .nav-item:hover a,
+            .layout-top-section .navbar-nav .nav-item:hover span,
+            .layout-top-section .navbar-nav .nav-item:hover i,
+            .layout-top-section .navbar-nav .nav-item:hover svg,
+            .layout-top-section .navbar-nav .user-menu:hover,
+            .layout-top-section .navbar-nav .user-menu:hover a,
+            .layout-top-section .navbar-nav .user-menu:hover span,
+            .layout-top-section .navbar-nav .user-menu:hover i,
+            .layout-top-section .navbar-nav .user-menu:hover svg {
+                color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)'} !important;
+                transform: translateY(-2px) !important;
+            }
+            
+            .layout-top-section .navbar-nav .nav-link:hover::after,
+            .layout-top-section .navbar-nav .dropdown-toggle:hover::after,
+            .layout-top-section .navbar-nav .nav-item:hover a::after {
+                width: 100% !important;
+            }
+            
+            /* Enhanced search bar with modern effects */
+            .layout-top-section .navbar-nav .form-control,
+            .navbar .form-control,
+            .top-bar .form-control,
+            .layout-top-section .navbar-search,
+            .navbar .navbar-search {
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'} !important;
+                color: ${textColor} !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.15)'} !important;
+                border-radius: 30px !important;
+                padding: 15px 25px !important;
+                transition: all 0.3s ease !important;
+                backdrop-filter: blur(15px) !important;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+                font-size: 16px !important;
+                width: 300px !important;
+                height: 50px !important;
+                position: relative !important;
+            }
+            
+            .layout-top-section .navbar-nav .form-control:focus,
+            .navbar .form-control:focus,
+            .top-bar .form-control:focus {
+                border-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)'} !important;
+                box-shadow: 0 0 25px ${textColor === '#ffffff' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.25)'} !important;
+                transform: translateY(-3px) scale(1.02) !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.12)'} !important;
+            }
+            
+            /* Search icon enhancement */
+            .layout-top-section .navbar-nav .form-control::before,
+            .navbar .form-control::before {
+                content: '🔍' !important;
+                position: absolute !important;
+                left: 15px !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                font-size: 18px !important;
+                opacity: 0.7 !important;
+                pointer-events: none !important;
+            }
+            
+            .layout-top-section .navbar-nav .form-control,
+            .navbar .form-control {
+                padding-left: 50px !important;
+            }
+            
+            .layout-top-section .navbar-nav .form-control::placeholder {
+                color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)'} !important;
+            }
+            
+            /* Enhanced notification icon */
+            .layout-top-section .navbar-nav .notification-icon,
+            .navbar .notification-icon,
+            .top-bar .notification-icon,
+            .layout-top-section .navbar-nav .bell-icon,
+            .navbar .bell-icon,
+            .top-bar .bell-icon {
+                position: relative !important;
+                padding: 12px !important;
+                border-radius: 50% !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                transition: all 0.3s ease !important;
+                cursor: pointer !important;
+                font-size: 20px !important;
+                color: ${textColor} !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            }
+            
+            .layout-top-section .navbar-nav .notification-icon:hover,
+            .navbar .notification-icon:hover,
+            .top-bar .notification-icon:hover {
+                transform: translateY(-2px) scale(1.1) !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            }
+            
+            /* Notification badge */
+            .layout-top-section .navbar-nav .notification-icon::after,
+            .navbar .notification-icon::after,
+            .top-bar .notification-icon::after {
+                content: '3' !important;
+                position: absolute !important;
+                top: 5px !important;
+                right: 5px !important;
+                background: #ff4757 !important;
+                color: white !important;
+                border-radius: 50% !important;
+                width: 18px !important;
+                height: 18px !important;
+                font-size: 12px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-weight: bold !important;
+                animation: pulse 2s infinite !important;
+            }
+            
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            
+            /* Hide help icon */
+            .layout-top-section .navbar-nav .help-icon,
+            .navbar .help-icon,
+            .top-bar .help-icon,
+            .layout-top-section .navbar-nav .question-icon,
+            .navbar .question-icon,
+            .top-bar .question-icon {
+                display: none !important;
+            }
+            
+            /* Enhanced profile section */
+            .layout-top-section .navbar-nav .user-menu,
+            .navbar .user-menu,
+            .top-bar .user-menu,
+            .layout-top-section .navbar-nav .profile-menu,
+            .navbar .profile-menu,
+            .top-bar .profile-menu {
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                border-radius: 25px !important;
+                padding: 8px 15px !important;
+                transition: all 0.3s ease !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+                cursor: pointer !important;
+            }
+            
+            .layout-top-section .navbar-nav .user-menu:hover,
+            .navbar .user-menu:hover,
+            .top-bar .user-menu:hover {
+                transform: translateY(-2px) !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            }
+            
+            /* Profile avatar enhancement */
+            .layout-top-section .navbar-nav .user-menu .avatar,
+            .navbar .user-menu .avatar,
+            .top-bar .user-menu .avatar {
+                width: 35px !important;
+                height: 35px !important;
+                border-radius: 50% !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'} !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .layout-top-section .navbar-nav .user-menu:hover .avatar,
+            .navbar .user-menu:hover .avatar,
+            .top-bar .user-menu:hover .avatar {
+                transform: scale(1.1) !important;
+                box-shadow: 0 0 15px ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'} !important;
+            }
+            
+            /* Enhanced notification icon */
+            .layout-top-section .navbar-nav .notification-icon,
+            .navbar .notification-icon,
+            .top-bar .notification-icon,
+            .layout-top-section .navbar-nav .bell-icon,
+            .navbar .bell-icon,
+            .top-bar .bell-icon {
+                position: relative !important;
+                padding: 12px !important;
+                border-radius: 50% !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                transition: all 0.3s ease !important;
+                cursor: pointer !important;
+                font-size: 20px !important;
+                color: ${textColor} !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            }
+            
+            .layout-top-section .navbar-nav .notification-icon:hover,
+            .navbar .notification-icon:hover,
+            .top-bar .notification-icon:hover {
+                transform: translateY(-2px) scale(1.1) !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            }
+            
+            /* Notification badge */
+            .layout-top-section .navbar-nav .notification-icon::after,
+            .navbar .notification-icon::after,
+            .top-bar .notification-icon::after {
+                content: '3' !important;
+                position: absolute !important;
+                top: 5px !important;
+                right: 5px !important;
+                background: #ff4757 !important;
+                color: white !important;
+                border-radius: 50% !important;
+                width: 18px !important;
+                height: 18px !important;
+                font-size: 12px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-weight: bold !important;
+                animation: pulse 2s infinite !important;
+            }
+            
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            
+            /* Hide help icon */
+            .layout-top-section .navbar-nav .help-icon,
+            .navbar .help-icon,
+            .top-bar .help-icon,
+            .layout-top-section .navbar-nav .question-icon,
+            .navbar .question-icon,
+            .top-bar .question-icon {
+                display: none !important;
+            }
+            
+            /* Enhanced profile section */
+            .layout-top-section .navbar-nav .user-menu,
+            .navbar .user-menu,
+            .top-bar .user-menu,
+            .layout-top-section .navbar-nav .profile-menu,
+            .navbar .profile-menu,
+            .top-bar .profile-menu {
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                border-radius: 25px !important;
+                padding: 8px 15px !important;
+                transition: all 0.3s ease !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+                cursor: pointer !important;
+            }
+            
+            .layout-top-section .navbar-nav .user-menu:hover,
+            .navbar .user-menu:hover,
+            .top-bar .user-menu:hover {
+                transform: translateY(-2px) !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            }
+            
+            /* Profile avatar enhancement */
+            .layout-top-section .navbar-nav .user-menu .avatar,
+            .navbar .user-menu .avatar,
+            .top-bar .user-menu .avatar {
+                width: 35px !important;
+                height: 35px !important;
+                border-radius: 50% !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'} !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .layout-top-section .navbar-nav .user-menu:hover .avatar,
+            .navbar .user-menu:hover .avatar,
+            .top-bar .user-menu:hover .avatar {
+                transform: scale(1.1) !important;
+                box-shadow: 0 0 15px ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'} !important;
+            }
+            
+            /* Dropdown menu */
+            .layout-top-section .navbar-nav .dropdown-menu {
+                background-color: ${backgroundColor.includes('gradient') ? backgroundColor : backgroundColor} !important;
+                border-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+            }
+        `;
+    } else {
+        styles = `
+            /* Main navbar background with modern effects */
+            .navbar, .top-bar, .header, .layout-top-section {
+                background-color: ${backgroundColor} !important; 
+                backdrop-filter: blur(20px) !important;
+                border: 1px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+                border-radius: 16px !important;
+                margin: 10px !important;
+                position: relative !important;
+                overflow: hidden !important;
+                min-height: 80px !important;
+                padding: 20px 30px !important;
+            }
+            
+            /* Enhanced logo styling */
+            .navbar-brand, .layout-top-section .navbar-brand {
+                font-size: 28px !important;
+                font-weight: 700 !important;
+                color: ${textColor} !important;
+                text-decoration: none !important;
+                transition: all 0.3s ease !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+            
+            .navbar-brand:hover, .layout-top-section .navbar-brand:hover {
+                transform: scale(1.05) !important;
+                text-shadow: 0 0 10px ${textColor === '#ffffff' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.3)'} !important;
+            }
+            
+            .navbar-brand img, .layout-top-section .navbar-brand img {
+                max-height: 40px !important;
+                max-width: 200px !important;
+                object-fit: contain !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .navbar-brand:hover img, .layout-top-section .navbar-brand:hover img {
+                transform: scale(1.1) !important;
+            }
+            
+            /* Animated background particles effect */
+            .navbar::before, .top-bar::before, .header::before, .layout-top-section::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: -100% !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: linear-gradient(90deg, transparent, ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}, transparent) !important;
+                animation: shimmer 3s infinite !important;
+                z-index: 0 !important;
+            }
+            
+            @keyframes shimmer {
+                0% { left: -100%; }
+                100% { left: 100%; }
+            }
+            
+            /* All navbar elements - comprehensive coverage */
+            .layout-top-section *, .layout-top-section .navbar *,
+            .layout-top-section .navbar-brand, .layout-top-section .navbar-nav,
+            .layout-top-section .navbar-toggler, .layout-top-section .navbar-nav a,
+            .layout-top-section .navbar-nav span, .layout-top-section .navbar-nav div,
+            .layout-top-section .navbar-nav .nav-link, .layout-top-section .navbar-nav .dropdown-toggle,
+            .layout-top-section .navbar-nav i, .layout-top-section .navbar-nav svg,
+            .layout-top-section .navbar-nav .btn, .layout-top-section .navbar-nav .form-control,
+            .layout-top-section .navbar-nav .nav-item, .layout-top-section .navbar-nav .nav-item a,
+            .layout-top-section .navbar-nav .nav-item span, .layout-top-section .navbar-nav .nav-item div,
+            .layout-top-section .navbar-nav .nav-item i, .layout-top-section .navbar-nav .nav-item svg,
+            .layout-top-section .navbar-nav .dropdown-menu, .layout-top-section .navbar-nav .dropdown-item,
+            .layout-top-section .navbar-nav .dropdown-item a, .layout-top-section .navbar-nav .dropdown-item span,
+            .layout-top-section .navbar-nav .dropdown-item i, .layout-top-section .navbar-nav .dropdown-item svg,
+            .layout-top-section .navbar-nav .form-control, .layout-top-section .navbar-nav .form-control::placeholder,
+            .layout-top-section .navbar-nav .btn, .layout-top-section .navbar-nav .btn i,
+            .layout-top-section .navbar-nav .btn span, .layout-top-section .navbar-nav .btn svg,
+            .layout-top-section .navbar-nav .user-menu, .layout-top-section .navbar-nav .user-menu *,
+            .layout-top-section .navbar-nav .user-menu a, .layout-top-section .navbar-nav .user-menu span,
+            .layout-top-section .navbar-nav .user-menu i, .layout-top-section .navbar-nav .user-menu svg,
+            .layout-top-section .navbar-nav .avatar, .layout-top-section .navbar-nav .full-name {
+                color: ${textColor} !important; 
+                border-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+            }
+            
+            /* Enhanced hover effects with animations */
+            .layout-top-section .navbar-nav .nav-link,
+            .layout-top-section .navbar-nav .dropdown-toggle,
+            .layout-top-section .navbar-nav .nav-item a {
+                position: relative !important;
+                transition: all 0.3s ease !important;
+                z-index: 1 !important;
+            }
+            
+            .layout-top-section .navbar-nav .nav-link::after,
+            .layout-top-section .navbar-nav .dropdown-toggle::after,
+            .layout-top-section .navbar-nav .nav-item a::after {
+                content: '' !important;
+                position: absolute !important;
+                bottom: -5px !important;
+                left: 50% !important;
+                width: 0 !important;
+                height: 2px !important;
+                background: linear-gradient(90deg, ${textColor === '#ffffff' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'}, ${textColor === '#ffffff' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'}) !important;
+                transition: all 0.3s ease !important;
+                transform: translateX(-50%) !important;
+                border-radius: 2px !important;
+            }
+            
+            .layout-top-section .navbar-nav .nav-link:hover,
+            .layout-top-section .navbar-nav .dropdown-toggle:hover,
+            .layout-top-section .navbar-nav .nav-item:hover,
+            .layout-top-section .navbar-nav .nav-item:hover a,
+            .layout-top-section .navbar-nav .nav-item:hover span,
+            .layout-top-section .navbar-nav .nav-item:hover i,
+            .layout-top-section .navbar-nav .nav-item:hover svg,
+            .layout-top-section .navbar-nav .user-menu:hover,
+            .layout-top-section .navbar-nav .user-menu:hover a,
+            .layout-top-section .navbar-nav .user-menu:hover span,
+            .layout-top-section .navbar-nav .user-menu:hover i,
+            .layout-top-section .navbar-nav .user-menu:hover svg {
+                color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)'} !important;
+                transform: translateY(-2px) !important;
+            }
+            
+            .layout-top-section .navbar-nav .nav-link:hover::after,
+            .layout-top-section .navbar-nav .dropdown-toggle:hover::after,
+            .layout-top-section .navbar-nav .nav-item:hover a::after {
+                width: 100% !important;
+            }
+            
+            /* Enhanced search bar with modern effects */
+            .layout-top-section .navbar-nav .form-control,
+            .navbar .form-control,
+            .top-bar .form-control,
+            .layout-top-section .navbar-search,
+            .navbar .navbar-search {
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'} !important;
+                color: ${textColor} !important;
+                border: 2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.15)'} !important;
+                border-radius: 30px !important;
+                padding: 15px 25px !important;
+                transition: all 0.3s ease !important;
+                backdrop-filter: blur(15px) !important;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+                font-size: 16px !important;
+                width: 300px !important;
+                height: 50px !important;
+                position: relative !important;
+            }
+            
+            .layout-top-section .navbar-nav .form-control:focus,
+            .navbar .form-control:focus,
+            .top-bar .form-control:focus {
+                border-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.4)'} !important;
+                box-shadow: 0 0 25px ${textColor === '#ffffff' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.25)'} !important;
+                transform: translateY(-3px) scale(1.02) !important;
+                background-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.12)'} !important;
+            }
+            
+            /* Search icon enhancement */
+            .layout-top-section .navbar-nav .form-control::before,
+            .navbar .form-control::before {
+                content: '🔍' !important;
+                position: absolute !important;
+                left: 15px !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                font-size: 18px !important;
+                opacity: 0.7 !important;
+                pointer-events: none !important;
+            }
+            
+            .layout-top-section .navbar-nav .form-control,
+            .navbar .form-control {
+                padding-left: 50px !important;
+            }
+            
+            .layout-top-section .navbar-nav .form-control::placeholder {
+                color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)'} !important;
+            }
+            
+            /* Dropdown menu */
+            .layout-top-section .navbar-nav .dropdown-menu {
+                background-color: ${backgroundColor} !important;
+                border-color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'} !important;
+            }
+        `;
+    }
+    
     console.log('Generated CSS:', styles);
     
     // Remove existing dynamic styles
@@ -908,108 +1199,21 @@ function applyTopBarStyles(color) {
             element.style.setProperty('color', textColor, 'important');
         });
         
-        // Apply enhanced styles to logo
-        const logos = document.querySelectorAll('.navbar-brand, .navbar .navbar-brand, .layout-top-section .navbar-brand, .navbar .logo, .navbar img[src*="logo"], .navbar img[alt*="logo"], .navbar img[alt*="Logo"], .navbar img[title*="logo"], .navbar img[title*="Logo"]');
-        logos.forEach(logo => {
-            logo.style.setProperty('height', '60px', 'important');
-            logo.style.setProperty('width', 'auto', 'important');
-            logo.style.setProperty('max-height', '60px', 'important');
-            logo.style.setProperty('max-width', '200px', 'important');
-            logo.style.setProperty('object-fit', 'contain', 'important');
-            logo.style.setProperty('transition', 'all 0.3s ease', 'important');
-        });
-        
-        // Apply enhanced styles to search bar specifically - preserve functionality
-        const searchInputs = document.querySelectorAll('#navbar-search, input[id*="navbar-search"], .navbar-search, .navbar .form-control[placeholder*="Search"], .navbar input[type="text"][placeholder*="Search"], input[placeholder*="Search"], .form-control[placeholder*="Search"], .search-bar input, .form-inline input');
+        // Apply enhanced styles to search bar specifically
+        const searchInputs = document.querySelectorAll('.layout-top-section .navbar-nav .form-control, .navbar .form-control, .top-bar .form-control, .layout-top-section .navbar-search, .navbar .navbar-search');
         searchInputs.forEach(input => {
-            // Apply proper search bar styling
-            input.style.setProperty('background', '#f8f9fa', 'important');
-            input.style.setProperty('border', '1px solid #ced4da', 'important');
-            input.style.setProperty('border-radius', '0.375rem', 'important');
-            input.style.setProperty('padding', '0.5rem 0.75rem', 'important');
-            input.style.setProperty('font-size', '0.875rem', 'important');
-            input.style.setProperty('line-height', '1.5', 'important');
-            input.style.setProperty('color', '#495057', 'important');
-            input.style.setProperty('width', '100%', 'important');
-            input.style.setProperty('max-width', '500px', 'important');
-            input.style.setProperty('transition', 'all 0.15s ease-in-out', 'important');
-            input.style.setProperty('display', 'block', 'important');
-            input.style.setProperty('visibility', 'visible', 'important');
-            input.style.setProperty('opacity', '1', 'important');
-            input.style.setProperty('pointer-events', 'auto', 'important');
-            input.style.setProperty('cursor', 'text', 'important');
-            input.style.setProperty('position', 'relative', 'important');
-            input.style.setProperty('z-index', '10', 'important');
-            
-            // Ensure search functionality is preserved
-            if (input.type === 'text' && input.placeholder) {
-                // Preserve ERPNext's awesome bar functionality
-                if (input.id === 'navbar-search' && typeof frappe !== 'undefined' && frappe.search && frappe.search.AwesomeBar) {
-                    try {
-                        const awesome_bar = new frappe.search.AwesomeBar();
-                        awesome_bar.setup("#navbar-search");
-                        console.log('✅ ERPNext Awesome Bar reinitialized');
-                    } catch (e) {
-                        console.warn('⚠️ Could not reinitialize Awesome Bar:', e);
-                    }
-                }
-                
-                // Remove existing event listeners to avoid duplicates
-                input.removeEventListener('keydown', handleSearchKeydown);
-                input.removeEventListener('click', handleSearchClick);
-                input.removeEventListener('keypress', handleSearchKeypress);
-                
-                // Add event listeners
-                input.addEventListener('keydown', handleSearchKeydown);
-                input.addEventListener('click', handleSearchClick);
-                input.addEventListener('keypress', handleSearchKeypress);
-                
-                // Add focus styles
-                input.addEventListener('focus', function(e) {
-                    this.style.setProperty('outline', 'none', 'important');
-                    this.style.setProperty('border-color', '#007bff', 'important');
-                    this.style.setProperty('box-shadow', '0 0 0 0.2rem rgba(0, 123, 255, 0.25)', 'important');
-                    this.style.setProperty('background', '#ffffff', 'important');
-                });
-                
-                input.addEventListener('blur', function(e) {
-                    this.style.setProperty('border-color', '#ced4da', 'important');
-                    this.style.setProperty('box-shadow', 'none', 'important');
-                    this.style.setProperty('background', '#f8f9fa', 'important');
-                });
-            }
+            input.style.setProperty('color', textColor, 'important');
+            input.style.setProperty('background-color', textColor === '#ffffff' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)', 'important');
+            input.style.setProperty('border', `2px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.15)'}`, 'important');
+            input.style.setProperty('border-radius', '30px', 'important');
+            input.style.setProperty('padding', '15px 25px', 'important');
+            input.style.setProperty('font-size', '16px', 'important');
+            input.style.setProperty('width', '300px', 'important');
+            input.style.setProperty('height', '50px', 'important');
+            input.style.setProperty('backdrop-filter', 'blur(15px)', 'important');
+            input.style.setProperty('box-shadow', '0 6px 20px rgba(0,0,0,0.15)', 'important');
+            input.style.setProperty('transition', 'all 0.3s ease', 'important');
         });
-        
-        // Define event handlers outside the loop to avoid duplication
-        function handleSearchKeydown(e) {
-                    // Preserve Ctrl+G shortcut
-                    if (e.ctrlKey && e.key === 'g') {
-                        e.preventDefault();
-                        this.focus();
-                    }
-        }
-                
-        function handleSearchClick(e) {
-                // Preserve click functionality
-                    this.focus();
-        }
-                
-        function handleSearchKeypress(e) {
-                // Preserve Enter key functionality
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const query = this.value.trim();
-                        if (query) {
-                            // Use ERPNext's search if available
-                            if (typeof frappe !== 'undefined' && frappe.search) {
-                                frappe.search.search(query);
-                            } else {
-                                // Fallback: navigate to search results
-                                window.location.href = `/app/search?q=${encodeURIComponent(query)}`;
-                            }
-                        }
-                    }
-            }
         
         // Apply to icons specifically
         const icons = document.querySelectorAll('.layout-top-section .navbar-nav i, .layout-top-section .navbar-nav svg, .navbar i, .navbar svg, .top-bar i, .top-bar svg');
@@ -1260,10 +1464,23 @@ function applyPageHeaderStyles(color) {
 
 
 // Change main content color function
-// REMOVED: changeMainContentColor function
+function changeMainContentColor(color) {
+    // Remove active class from all main content color swatches
+    document.querySelectorAll('.theme-section:nth-child(4) .color-swatch').forEach(swatch => {
+        swatch.classList.remove('active');
+    });
+    
+    // Add active class to clicked swatch
+    event.target.classList.add('active');
+    
+    // Apply color to main content
+    applyMainContentStyles(color);
+    
+    // Save to localStorage
+    localStorage.setItem('mainContentColor', color);
+}
 
-// REMOVED: applyMainContentStyles function
-/*
+// Apply CSS styles for main content colors
 function applyMainContentStyles(color) {
     let styles = '';
     
@@ -1464,7 +1681,6 @@ function applyMainContentStyles(color) {
     styleElement.textContent = styles;
     document.head.appendChild(styleElement);
 }
-*/
 
 // Change main content layout function
 function changeMainContentLayout(layout) {
@@ -1727,8 +1943,7 @@ function applyMainContentFont(font) {
     document.head.appendChild(styleElement);
 }
 
-// REMOVED: changeMainContentTextColor function
-/*
+// Change main content text color function
 function changeMainContentTextColor(color) {
     // Remove active class from all text color swatches
     document.querySelectorAll('.theme-section:nth-child(4) .color-swatch').forEach(swatch => {
@@ -1744,11 +1959,9 @@ function changeMainContentTextColor(color) {
     // Save to localStorage
     localStorage.setItem('mainContentTextColor', color);
 }
-*/
 
-// REMOVED: applyMainContentTextStyles function
-/*
-function applyMainContentTextStyles(color) {
+// Apply CSS styles for main content text colors
+        function applyMainContentTextStyles(color) {
             let styles = '';
             
             switch(color) {
@@ -1886,11 +2099,8 @@ function applyMainContentTextStyles(color) {
             styleElement.textContent = styles;
             document.head.appendChild(styleElement);
         }
-*/
 
-// REMOVED: changeFormContentStyle function
-/*
-function changeFormContentStyle(color, type) {
+        function changeFormContentStyle(color, type) {
             // Remove active class from all swatches in the specific color section
             const formSection = document.querySelector('.theme-section:nth-child(5)');
             if (formSection) {
@@ -1918,11 +2128,8 @@ function changeFormContentStyle(color, type) {
             // Save to localStorage
             localStorage.setItem(`formContent${type.charAt(0).toUpperCase() + type.slice(1)}`, color);
         }
-*/
 
-// REMOVED: applyFormContentStyles function
-/*
-function applyFormContentStyles(color, type) {
+        function applyFormContentStyles(color, type) {
             let styles = '';
             let colorValue = '';
             
@@ -2093,7 +2300,6 @@ function changeSidebarColor(color) {
     // Apply CSS styles based on color
     applySidebarStyles(color);
 }
-*/
 
 // Apply CSS styles for sidebar colors
 function applySidebarStyles(color) {
@@ -2982,33 +3188,22 @@ function changeSidebarFont(font) {
     applySidebarFontStyles(font);
 }
 
-// REMOVED: Change sidebar layout function - Layout Style section removed
-/*
+// Change sidebar layout function
 function changeSidebarLayout(layout) {
-    // Force default layout regardless of what user clicks
-    const defaultLayout = 'default';
-    
     // Remove active class from all layout options
     document.querySelectorAll('.layout-option').forEach(option => {
         option.classList.remove('active');
     });
     
-    // Add active class to default option only
-    const defaultOption = document.querySelector(`[data-layout="${defaultLayout}"]`);
-    if (defaultOption) {
-        defaultOption.classList.add('active');
-    }
+    // Add active class to clicked option
+    event.target.closest('.layout-option').classList.add('active');
     
-    // Save default layout to localStorage
-    localStorage.setItem('sidebarLayout', defaultLayout);
+    // Save to localStorage
+    localStorage.setItem('sidebarLayout', layout);
     
-    // Apply CSS styles for default layout
-    applySidebarLayoutStyles(defaultLayout);
-    
-    // Show message that layout is locked to default
-    console.log('Sidebar layout is locked to Default');
+    // Apply CSS styles for layout
+    applySidebarLayoutStyles(layout);
 }
-*/
 
 // Apply CSS styles for sidebar styles
 function applySidebarStyleStyles(style) {
@@ -3469,12 +3664,14 @@ function loadSavedSidebarSettings() {
         }
     }
     
-    // Apply default sidebar layout (even though UI is removed)
-    const defaultLayout = 'default';
-    applySidebarLayoutStyles(defaultLayout);
-    
-    // Save default layout to localStorage
-    localStorage.setItem('sidebarLayout', defaultLayout);
+    if (savedLayout) {
+        applySidebarLayoutStyles(savedLayout);
+        
+        const activeLayout = document.querySelector(`[data-layout="${savedLayout}"]`);
+        if (activeLayout) {
+            activeLayout.classList.add('active');
+        }
+    }
 }
 
 // Load saved color when DOM is ready
@@ -3482,380 +3679,5 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         loadSavedColor();
         loadSavedSidebarSettings();
-        
-        // Force default sidebar layout on page load
-        const defaultLayout = 'default';
-        applySidebarLayoutStyles(defaultLayout);
-        localStorage.setItem('sidebarLayout', defaultLayout);
-        console.log('✅ Default sidebar layout applied');
     }, 1000); // Delay to ensure elements are loaded
 });
-
-// Add navbar enhancements
-function addNavbarEnhancements() {
-    console.log('🚀 Adding navbar enhancements...');
-    console.log('🔍 Current URL:', window.location.href);
-    console.log('📄 Document ready state:', document.readyState);
-    
-    // Wait for navbar to be ready
-    setTimeout(() => {
-        // Try multiple selectors to find navbar
-        let navbar = document.querySelector('.layout-top-section .navbar-nav');
-        if (!navbar) {
-            navbar = document.querySelector('.navbar-nav');
-        }
-        if (!navbar) {
-            navbar = document.querySelector('.layout-top-section');
-        }
-        if (!navbar) {
-            navbar = document.querySelector('.navbar');
-        }
-        
-        console.log('Navbar found:', navbar);
-        
-        if (!navbar) {
-            console.log('Navbar not found, retrying...');
-            setTimeout(addNavbarEnhancements, 1000);
-            return;
-        }
-        
-        // Permanently remove any Add New / Fullscreen from DOM and skip creating new ones
-        const removeSelectors = [
-            '.add-new-btn',
-            '.fullscreen-btn',
-            '.nav.user-menu .nav-item.link-nav',
-            '.nav.user-menu li.link-nav',
-            '.link-nav',
-            '.dropdown-menu.dropdown-xl.dropdown-menu-center'
-        ];
-        document.querySelectorAll(removeSelectors.join(',')).forEach(n => { try { n.remove(); } catch(_){} });
-
-        // Remove by text match as well
-        document.querySelectorAll('.nav.user-menu .nav-item, .navbar .nav-item, .layout-top-section .nav-item, a, button').forEach(el => {
-            const t = (el.textContent || '').trim().toLowerCase();
-            if (t === 'add new' || t.startsWith('add new')) {
-                const node = el.closest('li, .nav-item, .dropdown, .btn-group') || el;
-                try { node.remove(); } catch(_){}
-            }
-        });
-
-        // Also remove any remaining plus-icon based nav
-        document.querySelectorAll('i.ti.ti-circle-plus, i.ti-circle-plus').forEach(icon => {
-            const node = icon.closest('li, .nav-item, .dropdown') || icon;
-            try { node.remove(); } catch(_){}
-        });
-
-        console.log('🔧 Skipped creating Add New/Fullscreen and removed existing elements');
-        
-        // End early: do not add any buttons
-        return;
-        
-        // Also try to add to top bar if navbar approach didn't work
-        setTimeout(() => {
-            const topBar = document.querySelector('.layout-top-section');
-            if (topBar && !document.querySelector('.fullscreen-btn')) {
-                console.log('Adding buttons to top bar as fallback...');
-                
-                // Create container for buttons
-                const buttonContainer = document.createElement('div');
-                buttonContainer.style.cssText = 'display: flex; align-items: center; margin-left: auto; gap: 8px;';
-                
-                // Recreate buttons - Add New first, then Full Screen
-                const addNewBtn2 = document.createElement('div');
-                addNewBtn2.className = 'add-new-btn';
-                addNewBtn2.innerHTML = '<span style="font-size: 16px; margin-right: 8px;">+</span> Add New';
-                addNewBtn2.title = 'Add New';
-                
-                const fullscreenBtn2 = document.createElement('button');
-                fullscreenBtn2.className = 'fullscreen-btn';
-                fullscreenBtn2.innerHTML = '<span style="font-size: 18px;">⛶</span>';
-                fullscreenBtn2.title = 'Full Screen';
-                fullscreenBtn2.onclick = toggleFullscreen;
-                
-                // Recreate dropdown
-                const dropdown2 = document.createElement('div');
-                dropdown2.className = 'add-new-dropdown';
-                dropdown2.innerHTML = `
-                    <div class="dropdown-item" onclick="openNewWindow('/app/item/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">📦</span>
-                        <span>Item</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/purchase-order/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">🛒</span>
-                        <span>Purchase Order</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/purchase-invoice/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">🧾</span>
-                        <span>Purchase Invoice</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/sales-order/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">📋</span>
-                        <span>Sales Order</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/sales-invoice/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">🧾</span>
-                        <span>Sales Invoice</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/customer/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">👥</span>
-                        <span>Customer</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/supplier/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">🚚</span>
-                        <span>Supplier</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/employee/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">👤</span>
-                        <span>Employee</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/stock-entry/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">🏪</span>
-                        <span>Stock Entry</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/delivery-note/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">📦</span>
-                        <span>Delivery Note</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/payment-entry/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">💰</span>
-                        <span>Payment Entry</span>
-                    </div>
-                    <div class="dropdown-item" onclick="openNewWindow('/app/journal-entry/new')">
-                        <span style="font-size: 24px; margin-bottom: 8px;">📖</span>
-                        <span>Journal Entry</span>
-                    </div>
-                `;
-                
-                addNewBtn2.appendChild(dropdown2);
-                
-                // Add click handler for dropdown
-                addNewBtn2.onclick = function(e) {
-                    e.stopPropagation();
-                    dropdown2.classList.toggle('show');
-                };
-                
-                buttonContainer.appendChild(addNewBtn2);
-                buttonContainer.appendChild(fullscreenBtn2);
-                topBar.appendChild(buttonContainer);
-                
-                console.log('Buttons added to top bar as fallback');
-            }
-        }, 1000);
-        
-        console.log('Navbar enhancements added successfully!');
-    }, 500);
-}
-
-// Fullscreen toggle function
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-            console.log('Error attempting to enable fullscreen:', err);
-        });
-    } else {
-        document.exitFullscreen();
-    }
-}
-
-// Open new window function
-function openNewWindow(url) {
-    window.open(url, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-}
-
-// Dynamic fullscreen icon color based on background
-function updateFullscreenIconColor() {
-    const fullscreenIcon = document.querySelector('#btnFullscreen');
-    if (!fullscreenIcon) return;
-    
-    const navbar = document.querySelector('.navbar, .header, .main-header, .layout-top-section');
-    if (!navbar) return;
-    
-    // Get computed background color
-    const computedStyle = window.getComputedStyle(navbar);
-    const backgroundColor = computedStyle.backgroundColor;
-    
-    // Convert RGB to hex for easier comparison
-    const rgbToHex = (rgb) => {
-        const result = rgb.match(/\d+/g);
-        if (!result) return '#000000';
-        const r = parseInt(result[0]);
-        const g = parseInt(result[1]);
-        const b = parseInt(result[2]);
-        return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    };
-    
-    const hexColor = rgbToHex(backgroundColor);
-    
-    // Calculate brightness
-    const getBrightness = (hex) => {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
-        return (r * 299 + g * 587 + b * 114) / 1000;
-    };
-    
-    const brightness = getBrightness(hexColor);
-    
-    // Apply appropriate filter based on brightness
-    if (brightness > 128) {
-        // Light background - dark icon
-        fullscreenIcon.style.setProperty('--icon-filter', 'brightness(0) saturate(100%) invert(0)');
-    } else {
-        // Dark background - light icon
-        fullscreenIcon.style.setProperty('--icon-filter', 'brightness(0) saturate(100%) invert(1)');
-    }
-    
-    // Apply the filter
-    const style = document.createElement('style');
-    style.textContent = `
-        #btnFullscreen::before {
-            filter: var(--icon-filter, brightness(0) saturate(100%) invert(1)) !important;
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Add fullscreen functionality
-    fullscreenIcon.addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleFullscreen();
-    });
-}
-
-// Call updateFullscreenIconColor when background changes
-function observeBackgroundChanges() {
-    const observer = new MutationObserver(() => {
-        updateFullscreenIconColor();
-    });
-    
-    const navbar = document.querySelector('.navbar, .header, .main-header, .layout-top-section');
-    if (navbar) {
-        observer.observe(navbar, { 
-            attributes: true, 
-            attributeFilter: ['style', 'class'] 
-        });
-    }
-}
-
-// Initialize background observer
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(observeBackgroundChanges, 2000);
-});
-
-// Fullscreen toggle function
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        // Enter fullscreen
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) {
-            document.documentElement.msRequestFullscreen();
-        }
-    } else {
-        // Exit fullscreen
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
-    }
-}
-
-// Create fullscreen button manually
-function createFullscreenButton() {
-    // Check if fullscreen button already exists
-    let fullscreenBtn = document.getElementById('btnFullscreen');
-    if (fullscreenBtn) {
-        console.log('Fullscreen button already exists');
-        return;
-    }
-    
-    console.log('Creating fullscreen button...');
-    
-    // Find search bar container
-    const searchBar = document.querySelector('input[placeholder*="Search"], .form-control[placeholder*="Search"], .search-bar input');
-    if (!searchBar) {
-        console.log('Search bar not found, trying alternative approach');
-        // Fallback: create button in navbar
-        const navbar = document.querySelector('.navbar, .layout-top-section');
-        if (navbar) {
-            fullscreenBtn = document.createElement('button');
-            fullscreenBtn.id = 'btnFullscreen';
-            fullscreenBtn.className = 'fullscreen-btn';
-            fullscreenBtn.title = 'Toggle Fullscreen';
-            fullscreenBtn.innerHTML = '<i class="custom-fullscreen-icon"></i>';
-            
-            // Style for navbar
-            fullscreenBtn.style.cssText = `
-                width: 35px !important;
-                height: 35px !important;
-                background: transparent !important;
-                border: 1px solid transparent !important;
-                border-radius: 4px !important;
-                color: white !important;
-                cursor: pointer !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                margin-left: 10px !important;
-                vertical-align: middle !important;
-            `;
-            
-            // Add to navbar
-            navbar.appendChild(fullscreenBtn);
-            
-            // Add click event
-            fullscreenBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                toggleFullscreen();
-            });
-            
-            console.log('Fullscreen button created in navbar');
-            return;
-        }
-        return;
-    }
-    
-    // Find search bar's parent container
-    let searchContainer = searchBar.closest('.input-group, .form-inline, .navbar-center, .search-bar');
-    if (!searchContainer) {
-        searchContainer = searchBar.parentElement;
-    }
-    
-    // Create fullscreen button element
-    fullscreenBtn = document.createElement('button');
-    fullscreenBtn.id = 'btnFullscreen';
-    fullscreenBtn.className = 'fullscreen-btn';
-    fullscreenBtn.title = 'Toggle Fullscreen';
-    fullscreenBtn.innerHTML = '<i class="custom-fullscreen-icon"></i>';
-    
-    // Style the button
-    fullscreenBtn.style.cssText = `
-        width: 35px !important;
-        height: 35px !important;
-        background: transparent !important;
-        border: 1px solid transparent !important;
-        border-radius: 4px !important;
-        color: white !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin-left: 10px !important;
-        vertical-align: middle !important;
-    `;
-    
-    // Insert after search bar
-    searchContainer.parentNode.insertBefore(fullscreenBtn, searchContainer.nextSibling);
-    
-    // Add click event
-    fullscreenBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleFullscreen();
-    });
-    
-    console.log('Fullscreen button created next to search bar');
-}
