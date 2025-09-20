@@ -27,28 +27,69 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('🔍 Is workspace route:', isWorkspaceRoute);
     
-    if (isWorkspaceRoute) {
-        console.log('🚫 Workspace route detected - hiding page header content');
-        hidePageHeaderContent();
-        // Try multiple times to ensure hiding
-        setTimeout(hidePageHeaderContent, 500);
-        setTimeout(hidePageHeaderContent, 1000);
-        setTimeout(hidePageHeaderContent, 2000);
-        // Don't return - continue to create buttons
-    }
+    // Restore ERPNext default page header styling
+    restoreDefaultPageHeader();
     
-    // Apply margin to page header content on all pages
-    applyPageHeaderMargin();
+    // Apply notifications icon color
+    applyNotificationsIconColor();
     
-    // Apply margin multiple times to ensure it works
-    setTimeout(applyPageHeaderMargin, 100);
-    setTimeout(applyPageHeaderMargin, 500);
-    setTimeout(applyPageHeaderMargin, 1000);
-    setTimeout(applyPageHeaderMargin, 2000);
+    // Load saved theme color
+    loadSavedThemeColor();
+    
+    // Apply with delays to ensure elements are loaded
+    setTimeout(restoreDefaultPageHeader, 500);
+    setTimeout(restoreDefaultPageHeader, 1000);
+    setTimeout(restoreDefaultPageHeader, 2000);
+    setTimeout(applyNotificationsIconColor, 100);
+    setTimeout(applyNotificationsIconColor, 300);
+    setTimeout(applyNotificationsIconColor, 500);
+    setTimeout(applyNotificationsIconColor, 1000);
+    setTimeout(applyNotificationsIconColor, 2000);
+    setTimeout(applyNotificationsIconColor, 3000);
     
     // Continuous monitoring with MutationObserver
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+                // Check if new buttons were added
+                const addedNodes = Array.from(mutation.addedNodes);
+                const hasButtons = addedNodes.some(node => 
+                    node.nodeType === 1 && (
+                        node.tagName === 'BUTTON' || 
+                        node.classList?.contains('btn') ||
+                        node.querySelector?.('button, .btn')
+                    )
+                );
+                
+                if (hasButtons) {
+                    console.log('🔄 New buttons detected, applying theme colors...');
+                    const savedTheme = localStorage.getItem('dreamThemeColor');
+                    if (savedTheme) {
+                        const themeColors = {
+                            'teal': { primary: '#20c997', secondary: '#17a2b8', accent: '#6f42c1', text: '#ffffff' },
+                            'red': { primary: '#dc3545', secondary: '#c82333', accent: '#e74c3c', text: '#ffffff' },
+                            'purple': { primary: '#6f42c1', secondary: '#5a32a3', accent: '#8e44ad', text: '#ffffff' },
+                            'blue': { primary: '#007bff', secondary: '#0056b3', accent: '#3498db', text: '#ffffff' },
+                            'green': { primary: '#28a745', secondary: '#1e7e34', accent: '#2ecc71', text: '#ffffff' },
+                            'orange-red': { primary: '#ff4500', secondary: '#e63900', accent: '#ff6347', text: '#ffffff' },
+                            'black': { primary: '#000000', secondary: '#333333', accent: '#666666', text: '#ffffff' }
+                        };
+                        const colors = themeColors[savedTheme] || themeColors['teal'];
+                        setTimeout(() => applyThemeToButtons(colors), 100);
+                    }
+                }
+            }
+        });
+    });
+    
+    // Start observing
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
     const marginObserver = new MutationObserver(() => {
-        applyPageHeaderMargin();
+        restoreDefaultPageHeader();
+        applyNotificationsIconColor();
     });
     marginObserver.observe(document.body, { 
         childList: true, 
@@ -56,6 +97,15 @@ document.addEventListener('DOMContentLoaded', function() {
         attributes: true,
         attributeFilter: ['class']
     });
+    
+    // Apply default layout immediately
+    console.log('🎨 Applying default layout...');
+    try {
+        applyDefaultSidebarLayout();
+        console.log('✅ Default layout applied');
+    } catch (e) {
+        console.error('❌ Default layout application failed:', e);
+    }
     
     // Create all buttons immediately
     console.log('🔧 Creating gear button immediately...');
@@ -74,16 +124,71 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('❌ Fullscreen button creation failed:', e);
     }
     
-    // Remove existing notification button if any
-    const existingNotificationBtn = document.getElementById('notification-btn');
-    if (existingNotificationBtn) {
-        console.log('🗑️ Removing existing notification button');
-        existingNotificationBtn.remove();
+
+    // Show ERPNext default notification icon
+    console.log('🔔 Showing ERPNext default notification icon...');
+    try {
+        // Try multiple selectors to find notification dropdown
+        const notificationSelectors = [
+            '.dropdown-notifications',
+            '.navbar .dropdown-notifications',
+            '.navbar-nav .dropdown-notifications',
+            '.navbar .nav-item.dropdown-notifications',
+            'li.dropdown-notifications'
+        ];
+        
+        let notificationDropdown = null;
+        for (let selector of notificationSelectors) {
+            notificationDropdown = document.querySelector(selector);
+            if (notificationDropdown) {
+                console.log(`Found notification dropdown with selector: ${selector}`);
+                break;
+            }
+        }
+        
+        if (notificationDropdown) {
+            notificationDropdown.classList.remove('hidden');
+            notificationDropdown.style.display = 'block';
+            notificationDropdown.style.visibility = 'visible';
+            notificationDropdown.style.opacity = '1';
+            
+            // Force show the notification icon
+            const notificationIcon = notificationDropdown.querySelector('.notifications-icon');
+            if (notificationIcon) {
+                notificationIcon.style.display = 'block';
+                notificationIcon.style.visibility = 'visible';
+                notificationIcon.style.opacity = '1';
+                notificationIcon.style.position = 'relative';
+                notificationIcon.style.width = '20px';
+                notificationIcon.style.height = '20px';
+                
+                // Clear any existing content
+                notificationIcon.innerHTML = '';
+                
+                // Add proper styling for CSS bell icon
+                notificationIcon.style.border = 'none';
+                notificationIcon.style.background = 'none';
+                
+                // Dynamic color detection based on navbar background
+                updateNotificationIconColor(notificationIcon);
+                
+                console.log('✅ Notification icon configured');
+            } else {
+                console.log('❌ Notification icon not found in dropdown');
+            }
+            
+            console.log('✅ ERPNext notification dropdown shown');
+        } else {
+            console.log('❌ ERPNext notification dropdown not found with any selector');
+            
+            // Debug: List all dropdown elements
+            const allDropdowns = document.querySelectorAll('[class*="dropdown"]');
+            console.log('Available dropdown elements:', allDropdowns);
+        }
+    } catch (e) {
+        console.error('❌ Failed to show ERPNext notification icon:', e);
     }
-    
-    // Notification button removed as requested
-    console.log('🔔 Notification button creation skipped');
-    
+
     // Wait a bit for page to fully load
     console.log('⏰ Starting additional button creation in 1000ms...');
     setTimeout(function() {
@@ -114,7 +219,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 const observer = new MutationObserver(() => {
                     removeNavbarButtons();
                     createFullscreenButton();
-                    // Notification button removed as requested
+                    
+                    // Show ERPNext notification icon on DOM changes
+                    const notificationDropdown = document.querySelector('.dropdown-notifications');
+                    if (notificationDropdown) {
+                        notificationDropdown.classList.remove('hidden');
+                        
+                        // Force show the notification icon
+                        const notificationIcon = notificationDropdown.querySelector('.notifications-icon');
+                        if (notificationIcon) {
+                            notificationIcon.style.display = 'block';
+                            notificationIcon.style.visibility = 'visible';
+                            notificationIcon.style.opacity = '1';
+                            notificationIcon.style.position = 'relative';
+                            notificationIcon.style.width = '20px';
+                            notificationIcon.style.height = '20px';
+                            
+                            // Clear any existing content
+                            notificationIcon.innerHTML = '';
+                            
+                            // Add proper styling for CSS bell icon
+                            notificationIcon.style.border = 'none';
+                            notificationIcon.style.background = 'none';
+                            
+                            // Dynamic color detection based on navbar background
+                            updateNotificationIconColor(notificationIcon);
+                        }
+                    }
                     
                     // Apply default sidebar layout on DOM changes
                     const defaultLayout = 'default';
@@ -129,217 +260,557 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 });
 
-// Function to hide page header content ONLY on workspace/dashboard routes
-function hidePageHeaderContent() {
-    // Check if we're actually on workspace/dashboard route
-    const currentRoute = window.location.pathname;
-    const isWorkspaceRoute = currentRoute === '/app' || currentRoute === '/app/' || 
-                            document.body.getAttribute('data-page-route') === 'app' ||
-                            document.body.getAttribute('data-page-route') === '/app' ||
-                            document.body.getAttribute('data-page-route') === '/app/' ||
-                            currentRoute === '/workspace' || currentRoute === '/workspace/' ||
-                            document.body.getAttribute('data-page-route') === 'workspace' ||
-                            document.body.getAttribute('data-page-route') === '/workspace' ||
-                            document.body.getAttribute('data-page-route') === '/workspace/' ||
-                            currentRoute === '/dashboard' || currentRoute === '/dashboard/' ||
-                            document.body.getAttribute('data-page-route') === 'dashboard' ||
-                            document.body.getAttribute('data-page-route') === '/dashboard' ||
-                            document.body.getAttribute('data-page-route') === '/dashboard/' ||
-                            currentRoute === '/' || currentRoute === '/desk' || currentRoute === '/home' || 
-                            document.body.getAttribute('data-page-route') === 'home' ||
-                            document.body.getAttribute('data-page-route') === 'desk' ||
-                            document.body.classList.contains('home-page');
+// Function to restore ERPNext default page header styling
+function restoreDefaultPageHeader() {
+    console.log('🔄 Restoring ERPNext default page header styling...');
     
-    if (!isWorkspaceRoute) {
-        console.log('⚠️ Not on workspace route - skipping page header hiding');
-        return;
-    }
-    
-    // Try multiple selectors
+    // Remove any custom styling and let ERPNext handle it
     const selectors = [
+        '.page-head',
         '.page-head-content',
         '.row.flex.align-center.page-head-content',
-        '.page-head-content .col-md-4',
-        '.page-head-content .col-sm-6',
-        '.page-head-content .col-xs-7',
-        '.page-head-content .page-title',
-        '.page-head-content .sidebar-toggle-btn',
-        '.page-head-content .title-area',
-        '.page-head-content .title-text',
-        '.page-head-content .page-actions'
+        '.page-head .container',
+        '.container',
+        '.row',
+        '.flex',
+        '.page-title',
+        '.page-actions'
     ];
     
     selectors.forEach(selector => {
         const elements = document.querySelectorAll(selector);
         elements.forEach(element => {
-            element.style.position = 'fixed';
-            element.style.top = '0';
-            element.style.left = '0';
-            element.style.right = '40px';
-            element.style.width = 'calc(100% - 40px)';
-            element.style.marginRight = '40px';
-            element.style.zIndex = '1000';
-            element.style.background = '#ffffff';
-            element.style.borderBottom = '1px solid #e9ecef';
-            element.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            element.style.display = 'flex';
-            element.style.visibility = 'visible';
-            element.style.opacity = '1';
-            element.style.height = '60px';
-            element.style.margin = '0';
-            element.style.padding = '0 20px';
-            element.style.alignItems = 'center';
-            element.style.justifyContent = 'space-between';
+            // Remove custom inline styles
+            element.style.removeProperty('margin');
+            element.style.removeProperty('max-width');
+            element.style.removeProperty('width');
+            element.style.removeProperty('position');
+            element.style.removeProperty('top');
+            element.style.removeProperty('left');
+            element.style.removeProperty('right');
+            element.style.removeProperty('z-index');
+            element.style.removeProperty('background');
+            element.style.removeProperty('border-bottom');
+            element.style.removeProperty('box-shadow');
+            element.style.removeProperty('height');
+            element.style.removeProperty('padding');
+            element.style.removeProperty('align-items');
+            element.style.removeProperty('justify-content');
         });
     });
     
-    console.log('✅ Page header content stretched to full width on workspace routes');
+    console.log('✅ ERPNext default page header styling restored');
 }
 
-// Function to apply margin to page header content on ALL pages
-function applyPageHeaderMargin() {
-    console.log('🎯 Applying 40px margin to page header content on all pages...');
+// Function to apply dynamic color to notifications icon based on navbar background
+function applyNotificationsIconColor() {
+    console.log('🔔 Applying dynamic color to notifications icon...');
     
-    // Try multiple approaches
-    const approaches = [
-        // Approach 1: Direct class targeting
-        () => {
-            const elements = document.querySelectorAll('.page-head-content, .row.flex.align-center.page-head-content');
-            elements.forEach(el => {
-                el.style.setProperty('margin-right', '40px', 'important');
-                el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-            });
-        },
+    const navbar = document.querySelector('.navbar, .layout-top-section, .header, .main-header');
+    
+    // Try multiple selectors for notifications icon
+    const selectors = [
+        '.btn-reset.nav-link.notifications-icon.text-muted',
+        '.nav-item.dropdown.dropdown-notifications.dropdown-mobile',
+        '.nav-item.dropdown.dropdown-notifications',
+        '.dropdown-notifications',
+        '[class*="notifications"]',
+        '[class*="dropdown-notifications"]'
+    ];
+    
+    let notificationsIcon = null;
+    for (const selector of selectors) {
+        notificationsIcon = document.querySelector(selector);
+        if (notificationsIcon) {
+            console.log('✅ Found notifications icon with selector:', selector);
+            break;
+        }
+    }
+    
+    if (!navbar || !notificationsIcon) {
+        console.log('❌ Navbar or notifications icon not found');
+        console.log('🔍 Available elements:', document.querySelectorAll('[class*="notifications"]'));
+        return;
+    }
+    
+    // Get computed background color
+    const computedStyle = window.getComputedStyle(navbar);
+    const backgroundColor = computedStyle.backgroundColor;
+    const backgroundImage = computedStyle.backgroundImage;
+    
+    console.log('🎨 Navbar background:', backgroundColor, backgroundImage);
+    
+    // Determine if background is dark
+    let isDark = false;
+    
+    // Check for dark colors
+    if (backgroundColor.includes('rgb(0, 0, 0)') || 
+        backgroundColor.includes('rgb(52, 58, 64)') || 
+        backgroundColor.includes('rgb(111, 66, 193)') || 
+        backgroundColor.includes('rgb(0, 123, 255)') || 
+        backgroundColor.includes('rgb(40, 167, 69)') || 
+        backgroundColor.includes('rgb(32, 201, 151)')) {
+        isDark = true;
+    }
+    
+    // Check inline styles
+    const inlineStyle = navbar.getAttribute('style') || '';
+    if (inlineStyle.includes('#000000') || 
+        inlineStyle.includes('#343a40') || 
+        inlineStyle.includes('#6f42c1') || 
+        inlineStyle.includes('#007bff') || 
+        inlineStyle.includes('#28a745') || 
+        inlineStyle.includes('#20c997')) {
+        isDark = true;
+    }
+    
+    const textColor = isDark ? '#ffffff' : '#333333';
+    const strokeColor = isDark ? '#ffffff' : '#333333';
+    const fillColor = isDark ? '#ffffff' : '#333333';
+    
+    console.log('🎯 Applying color:', textColor, 'to notifications icon');
+    console.log('🔍 Notifications icon element:', notificationsIcon);
+    
+    // ULTIMATE FORCE - Remove all inline styles first
+    notificationsIcon.removeAttribute('style');
+    const allElements = notificationsIcon.querySelectorAll('*');
+    allElements.forEach(element => {
+        element.removeAttribute('style');
+    });
+    
+    // Apply color to all elements within notifications icon
+    allElements.forEach(element => {
+        element.style.setProperty('color', textColor, 'important');
+        element.style.setProperty('stroke', strokeColor, 'important');
+        element.style.setProperty('fill', fillColor, 'important');
+    });
+    
+    // Apply to the button itself
+    notificationsIcon.style.setProperty('color', textColor, 'important');
+    notificationsIcon.style.setProperty('stroke', strokeColor, 'important');
+    notificationsIcon.style.setProperty('fill', fillColor, 'important');
+    
+    // Force apply with direct style manipulation
+    notificationsIcon.style.color = textColor + ' !important';
+    notificationsIcon.style.stroke = strokeColor + ' !important';
+    notificationsIcon.style.fill = fillColor + ' !important';
+    
+    // Apply to all child elements with direct style manipulation
+    allElements.forEach(element => {
+        element.style.color = textColor + ' !important';
+        element.style.stroke = strokeColor + ' !important';
+        element.style.fill = fillColor + ' !important';
+    });
+    
+    // NUCLEAR OPTION - Force white for testing
+    if (isDark) {
+        console.log('🚀 NUCLEAR OPTION - Forcing white color');
+        notificationsIcon.style.cssText = `color: #ffffff !important; stroke: #ffffff !important; fill: #ffffff !important;`;
+        allElements.forEach(element => {
+            element.style.cssText = `color: #ffffff !important; stroke: #ffffff !important; fill: #ffffff !important;`;
+        });
         
-        // Approach 2: Attribute targeting
-        () => {
-            const elements = document.querySelectorAll('[class*="page-head-content"]');
-            elements.forEach(el => {
-                el.style.setProperty('margin-right', '40px', 'important');
-                el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-            });
-        },
-        
-        // Approach 3: All divs with page-head
-        () => {
-            const elements = document.querySelectorAll('div[class*="page-head"]');
-            elements.forEach(el => {
-                el.style.setProperty('margin-right', '40px', 'important');
-                el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-            });
-        },
-        
-        // Approach 4: Force with CSS injection
-        () => {
+        // Apply white color to bell icon pseudo-elements
             const style = document.createElement('style');
             style.textContent = `
-                .page-head-content,
-                .row.flex.align-center.page-head-content,
-                [class*="page-head-content"],
-                div[class*="page-head"],
-                *[class*="page-head"] {
-                    margin-right: 40px !important;
-                    max-width: calc(100% - 40px) !important;
-                    width: calc(100% - 40px) !important;
-                    box-sizing: border-box !important;
+            .dropdown-notifications .notifications-icon::before,
+            .dropdown-notifications .notifications-icon::after {
+                border-color: #ffffff !important;
+            }
+            .dropdown-notifications .notifications-icon::after {
+                background: #ffffff !important;
                 }
             `;
             document.head.appendChild(style);
-        },
-        
-        // Approach 5: Nuclear option - target all elements
-        () => {
-            const allElements = document.querySelectorAll('*');
-            allElements.forEach(el => {
-                if (el.className && typeof el.className === 'string' && el.className.includes('page-head')) {
-                    el.style.setProperty('margin-right', '40px', 'important');
-                    el.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
-                    el.style.setProperty('width', 'calc(100% - 40px)', 'important');
-                    el.style.setProperty('box-sizing', 'border-box', 'important');
-                }
-            });
-        }
-    ];
-    
-    // Execute all approaches
-    approaches.forEach(approach => {
-        try {
-            approach();
-        } catch (e) {
-            console.log('Approach failed:', e);
-        }
-    });
-    
-    console.log('✅ Page header content margin applied to all pages');
-    
-    // Debug: Log what elements were found
-    const debugElements = document.querySelectorAll('.page-head-content, [class*="page-head-content"]');
-    console.log('🔍 Found page-head elements:', debugElements.length);
-    debugElements.forEach((el, index) => {
-        console.log(`Element ${index}:`, el.className, el.style.marginRight);
-    });
-    
-    // Force apply to any visible page-head elements
-    try {
-        const allPageHeadElements = document.querySelectorAll('*');
-        allPageHeadElements.forEach(el => {
-            try {
-                if (el.className && typeof el.className === 'string' && el.className.includes('page-head') && el.offsetParent !== null) {
-                    console.log('🎯 Force applying margin to visible element:', el.className);
-                    el.style.marginRight = '40px';
-                    el.style.maxWidth = 'calc(100% - 40px)';
-                    el.style.width = 'calc(100% - 40px)';
-                    el.style.boxSizing = 'border-box';
-                }
-            } catch (e) {
-                console.log('Error processing element:', e);
+    } else {
+        // Apply dark color to bell icon pseudo-elements
+        const style = document.createElement('style');
+        style.textContent = `
+            .dropdown-notifications .notifications-icon::before,
+            .dropdown-notifications .notifications-icon::after {
+                border-color: #333333 !important;
             }
+            .dropdown-notifications .notifications-icon::after {
+                background: #333333 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    console.log('✅ Notifications icon color applied:', textColor);
+}
+
+// Function to change theme color
+function setThemeColor(theme) {
+    console.log('🎨 Setting theme color to:', theme);
+    
+    // Remove active class from all theme color options
+    document.querySelectorAll('.theme-color-option').forEach(option => {
+        option.classList.remove('active');
+    });
+    
+    // Add active class to selected option
+    const selectedOption = document.querySelector(`[data-theme="${theme}"]`);
+    if (selectedOption) {
+        selectedOption.classList.add('active');
+    }
+    
+    // Apply theme color
+    applyThemeColorStyles(theme);
+    
+    // Save to localStorage
+    localStorage.setItem('dreamThemeColor', theme);
+}
+
+// Function to apply theme color styles
+function applyThemeColorStyles(theme) {
+    console.log('🎯 Applying theme color styles:', theme);
+    
+    // Remove existing theme classes
+    document.body.classList.remove('theme-orange', 'theme-teal', 'theme-red', 'theme-purple', 'theme-blue', 'theme-green', 'theme-orange-red');
+    document.documentElement.classList.remove('theme-orange', 'theme-teal', 'theme-red', 'theme-purple', 'theme-blue', 'theme-green', 'theme-orange-red');
+    
+    // Add new theme class
+    document.body.classList.add(`theme-${theme}`);
+    document.documentElement.classList.add(`theme-${theme}`);
+    
+    // Apply theme-specific colors
+    const themeColors = {
+        'teal': {
+            primary: '#20c997',
+            secondary: '#17a2b8',
+            accent: '#6f42c1',
+            text: '#ffffff'
+        },
+        'red': {
+            primary: '#dc3545',
+            secondary: '#c82333',
+            accent: '#e74c3c',
+            text: '#ffffff'
+        },
+        'purple': {
+            primary: '#6f42c1',
+            secondary: '#5a32a3',
+            accent: '#8e44ad',
+            text: '#ffffff'
+        },
+        'blue': {
+            primary: '#007bff',
+            secondary: '#0056b3',
+            accent: '#3498db',
+            text: '#ffffff'
+        },
+        'green': {
+            primary: '#28a745',
+            secondary: '#1e7e34',
+            accent: '#2ecc71',
+            text: '#ffffff'
+        },
+        'orange-red': {
+            primary: '#ff4500',
+            secondary: '#e63900',
+            accent: '#ff6347',
+            text: '#ffffff'
+        },
+        'black': {
+            primary: '#000000',
+            secondary: '#333333',
+            accent: '#666666',
+            text: '#ffffff'
+        }
+    };
+    
+    const colors = themeColors[theme] || themeColors['teal'];
+    
+    // Apply CSS custom properties
+    document.documentElement.style.setProperty('--theme-primary', colors.primary);
+    document.documentElement.style.setProperty('--theme-secondary', colors.secondary);
+    document.documentElement.style.setProperty('--theme-accent', colors.accent);
+    document.documentElement.style.setProperty('--theme-text', colors.text);
+    
+    // Apply theme colors to buttons
+    applyThemeToButtons(colors);
+    
+    // Apply theme colors to lines and borders
+    applyThemeToLines(colors);
+    
+    // Apply with delays to ensure elements are loaded
+    setTimeout(() => applyThemeToButtons(colors), 100);
+    setTimeout(() => applyThemeToButtons(colors), 300);
+    setTimeout(() => applyThemeToButtons(colors), 500);
+    setTimeout(() => applyThemeToButtons(colors), 1000);
+    setTimeout(() => applyThemeToButtons(colors), 2000);
+    setTimeout(() => applyThemeToButtons(colors), 3000);
+    
+    console.log('✅ Theme color styles applied:', colors);
+}
+
+// Function to apply theme colors to buttons
+function applyThemeToButtons(colors) {
+    console.log('🔘 Applying theme colors to buttons:', colors);
+    
+    // Apply to all buttons with more comprehensive selectors
+    const buttons = document.querySelectorAll('button, .btn, .btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-light, .btn-dark, .btn-sm, .btn-lg, .btn-xs, [class*="btn"], [class*="button"]');
+    console.log('🔍 Found buttons:', buttons.length);
+    
+    buttons.forEach((button, index) => {
+        console.log(`🔘 Button ${index + 1}:`, button.className, button.textContent?.trim());
+        
+        // Primary buttons
+        if (button.classList.contains('btn-primary') || button.classList.contains('primary-action')) {
+            button.style.setProperty('background-color', colors.primary, 'important');
+            button.style.setProperty('border-color', colors.primary, 'important');
+            button.style.setProperty('color', colors.text, 'important');
+            console.log('✅ Applied primary colors to button:', button.textContent?.trim());
+        }
+        // Secondary buttons
+        else if (button.classList.contains('btn-secondary')) {
+            button.style.setProperty('background-color', colors.secondary, 'important');
+            button.style.setProperty('border-color', colors.secondary, 'important');
+            button.style.setProperty('color', colors.text, 'important');
+            console.log('✅ Applied secondary colors to button:', button.textContent?.trim());
+        }
+        // Success buttons
+        else if (button.classList.contains('btn-success')) {
+            button.style.setProperty('background-color', colors.primary, 'important');
+            button.style.setProperty('border-color', colors.primary, 'important');
+            button.style.setProperty('color', colors.text, 'important');
+            console.log('✅ Applied success colors to button:', button.textContent?.trim());
+        }
+        // Danger buttons
+        else if (button.classList.contains('btn-danger')) {
+            button.style.setProperty('background-color', colors.accent, 'important');
+            button.style.setProperty('border-color', colors.accent, 'important');
+            button.style.setProperty('color', colors.text, 'important');
+            console.log('✅ Applied danger colors to button:', button.textContent?.trim());
+        }
+        // Default buttons
+        else if (button.classList.contains('btn-default') || button.classList.contains('btn')) {
+            button.style.setProperty('border-color', colors.primary, 'important');
+            button.style.setProperty('color', colors.primary, 'important');
+            console.log('✅ Applied default colors to button:', button.textContent?.trim());
+        }
+        // All other buttons
+        else {
+            button.style.setProperty('border-color', colors.primary, 'important');
+            button.style.setProperty('color', colors.primary, 'important');
+            console.log('✅ Applied general colors to button:', button.textContent?.trim());
+        }
+    });
+    
+    // Apply to form controls
+    const formControls = document.querySelectorAll('.form-control, .input-with-feedback, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="tel"], input[type="url"], textarea, select, .form-select');
+    formControls.forEach(control => {
+        control.style.setProperty('border-color', colors.primary, 'important');
+        control.addEventListener('focus', function() {
+            this.style.setProperty('border-color', colors.accent, 'important');
+            this.style.setProperty('box-shadow', `0 0 0 0.2rem ${colors.accent}40`, 'important');
         });
-    } catch (e) {
-        console.log('Error in force apply:', e);
+    });
+    
+    // Apply to links that look like buttons
+    const buttonLinks = document.querySelectorAll('a.btn, .btn-link, .link-button');
+    buttonLinks.forEach(link => {
+        link.style.setProperty('color', colors.primary, 'important');
+        link.style.setProperty('border-color', colors.primary, 'important');
+    });
+    
+    // Apply to icon buttons
+    const iconButtons = document.querySelectorAll('.icon-btn, .btn-icon, .btn-reset');
+    iconButtons.forEach(button => {
+        button.style.setProperty('color', colors.primary, 'important');
+        button.style.setProperty('border-color', colors.primary, 'important');
+    });
+    
+    console.log('✅ Button theme colors applied to', buttons.length, 'buttons');
+}
+
+// Function to apply theme colors to lines and borders
+function applyThemeToLines(colors) {
+    console.log('📏 Applying theme colors to lines and borders:', colors);
+    
+    // Apply to specific line elements
+    const lineElements = document.querySelectorAll('.divider, .border, .border-top, .border-bottom, .border-left, .border-right, hr, .separator, .line, .rule, .hr');
+    lineElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+        element.style.backgroundColor = colors.primary + ' !important';
+    });
+    
+    // Apply to table borders
+    const tableElements = document.querySelectorAll('table, th, td, .table, .table th, .table td, .data-table, .list-table');
+    tableElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to card borders
+    const cardElements = document.querySelectorAll('.card, .panel, .widget, .box, .container, .row');
+    cardElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to form borders
+    const formElements = document.querySelectorAll('.form-group, .control-group, .field-group, .input-group');
+    formElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to navigation borders
+    const navElements = document.querySelectorAll('.navbar, .nav, .nav-tabs, .nav-pills, .breadcrumb');
+    navElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to modal borders
+    const modalElements = document.querySelectorAll('.modal, .modal-content, .modal-header, .modal-footer');
+    modalElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to dropdown borders
+    const dropdownElements = document.querySelectorAll('.dropdown-menu, .dropdown-content, .dropdown-item');
+    dropdownElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to alert borders
+    const alertElements = document.querySelectorAll('.alert, .notification, .message, .alert-info, .alert-success, .alert-warning, .alert-danger');
+    alertElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to progress bar borders
+    const progressElements = document.querySelectorAll('.progress, .progress-bar, .progress-striped');
+    progressElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to badge borders
+    const badgeElements = document.querySelectorAll('.badge, .label, .tag, .pill');
+    badgeElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to pagination borders
+    const paginationElements = document.querySelectorAll('.pagination, .pagination .page-item, .pagination .page-link');
+    paginationElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to list borders
+    const listElements = document.querySelectorAll('.list-group, .list-group-item, .list-unstyled');
+    listElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to sidebar borders
+    const sidebarElements = document.querySelectorAll('.sidebar, .layout-side-section, .sidebar-menu, .sidebar-section');
+    sidebarElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to main content borders
+    const mainElements = document.querySelectorAll('.main-content, .content-area, .page-content, .layout-main-section');
+    mainElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to top bar borders
+    const topBarElements = document.querySelectorAll('.layout-top-section, .navbar, .header, .top-bar');
+    topBarElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    // Apply to page header borders
+    const pageHeaderElements = document.querySelectorAll('.page-head, .page-header, .page-title-area');
+    pageHeaderElements.forEach(element => {
+        element.style.borderColor = colors.primary + ' !important';
+    });
+    
+    console.log('✅ Line theme colors applied');
+}
+
+// Function to apply theme colors to backgrounds
+function applyThemeToBackgrounds(colors) {
+    console.log('🎨 Applying theme colors to backgrounds:', colors);
+    
+    // Apply to top bar/navbar
+    const topBarElements = document.querySelectorAll('.navbar, .navbar-expand-lg, .navbar-container, .header, .main-header, .layout-top-section, .top-bar, [class*="navbar"], [class*="header"], [class*="top"]');
+    console.log('🔍 Found top bar elements:', topBarElements.length);
+    topBarElements.forEach((element, index) => {
+        element.style.setProperty('background-color', colors.primary, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+        console.log(`✅ Applied top bar colors to element ${index + 1}:`, element.className);
+    });
+    
+    // Apply to sidebar
+    const sidebarElements = document.querySelectorAll('.sidebar, .layout-side-section, .side-section, .nav-sidebar, .sidebar-nav, [class*="sidebar"], [class*="side-section"]');
+    console.log('🔍 Found sidebar elements:', sidebarElements.length);
+    sidebarElements.forEach((element, index) => {
+        element.style.setProperty('background-color', colors.secondary, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+        console.log(`✅ Applied sidebar colors to element ${index + 1}:`, element.className);
+    });
+    
+    // Apply to primary backgrounds
+    const primaryBackgrounds = document.querySelectorAll('.bg-primary, .primary-bg, .main-bg, .content-bg');
+    primaryBackgrounds.forEach(element => {
+        element.style.setProperty('background-color', colors.primary, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+    });
+    
+    // Apply to secondary backgrounds
+    const secondaryBackgrounds = document.querySelectorAll('.bg-secondary, .secondary-bg, .sidebar-bg');
+    secondaryBackgrounds.forEach(element => {
+        element.style.setProperty('background-color', colors.secondary, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+    });
+    
+    // Apply to accent backgrounds
+    const accentBackgrounds = document.querySelectorAll('.bg-accent, .accent-bg, .highlight-bg');
+    accentBackgrounds.forEach(element => {
+        element.style.setProperty('background-color', colors.accent, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+    });
+    
+    // Apply to card headers
+    const cardHeaders = document.querySelectorAll('.card-header, .panel-heading, .modal-header');
+    cardHeaders.forEach(element => {
+        element.style.setProperty('background-color', colors.primary, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+        element.style.setProperty('border-color', colors.primary, 'important');
+    });
+    
+    // Apply to navigation elements
+    const navElements = document.querySelectorAll('.nav, .nav-tabs, .nav-pills');
+    navElements.forEach(element => {
+        element.style.setProperty('background-color', colors.primary, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+    });
+    
+    // Apply to active states
+    const activeElements = document.querySelectorAll('.active, .selected, .current');
+    activeElements.forEach(element => {
+        element.style.setProperty('background-color', colors.accent, 'important');
+        element.style.setProperty('color', colors.text, 'important');
+    });
+    
+    console.log('✅ Background theme colors applied');
+}
+
+// Function to load saved theme color
+function loadSavedThemeColor() {
+    const savedTheme = localStorage.getItem('dreamThemeColor');
+    if (savedTheme) {
+        console.log('📁 Loading saved theme color:', savedTheme);
+        setThemeColor(savedTheme);
     }
 }
 
-// Create notification button
-function createNotificationButton() {
-    // Check if notification button already exists
-    let notificationBtn = document.getElementById('notification-btn');
-    if (notificationBtn) {
-        console.log('Notification button already exists');
-        return;
-    }
+
+
     
-    console.log('Creating notification button...');
     
-    // Find navbar right section
-    const navbarRight = document.querySelector('.navbar-right, .navbar-nav, .navbar .nav');
-    if (!navbarRight) {
-        console.log('Navbar right section not found');
-        return;
-    }
     
-    // Create notification button element
-    notificationBtn = document.createElement('button');
-    notificationBtn.id = 'notification-btn';
-    notificationBtn.className = 'notification-btn';
-    notificationBtn.title = 'Notifications';
-    notificationBtn.innerHTML = '<i class="fas fa-bell"></i>';
-    
-    // Add click event
-    notificationBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        console.log('🔔 Notification button clicked');
-        // Add notification functionality here
-    });
-    
-    // Add to navbar
-    navbarRight.appendChild(notificationBtn);
-    
-    console.log('✅ Notification button created');
-}
 
 function createFloatingGearButton() {
     console.log('🔧 Creating floating gear button...');
@@ -369,63 +840,69 @@ function createFloatingGearButton() {
     settingsPanel.className = 'settings-panel';
     settingsPanel.innerHTML = `
         <div class="settings-panel-header">
-            <h5>Theme Customizer</h5>
-            <p>Choose your themes & layouts etc.</p>
+            <div class="header-content">
+                <div class="header-icon">🎨</div>
+                <div class="header-text">
+                    <h5>Theme Customizer</h5>
+                    <p>Customize your ERPNext experience</p>
+                </div>
+            </div>
+            <button class="close-btn" onclick="toggleSettingsPanel()">×</button>
         </div>
         <div class="settings-panel-body">
             <div class="theme-section">
-                <h6>Top Bar Color</h6>
-                <div class="color-section">
-                    <label>Solid Colors</label>
-                    <div class="color-swatches solid-colors">
-                        <div class="color-swatch white" data-color="white" onclick="changeTopBarColor('white')"></div>
-                        <div class="color-swatch light-green active" data-color="lightgreen" onclick="changeTopBarColor('lightgreen')"></div>
-                        <div class="color-swatch dark-gray" data-color="darkgray" onclick="changeTopBarColor('darkgray')"></div>
-                        <div class="color-swatch black" data-color="black" onclick="changeTopBarColor('black')"></div>
-                        <div class="color-swatch blue" data-color="blue" onclick="changeTopBarColor('blue')"></div>
-                        <div class="color-swatch purple" data-color="purple" onclick="changeTopBarColor('purple')"></div>
-                        <div class="color-swatch teal" data-color="teal" onclick="changeTopBarColor('teal')"></div>
-                    </div>
+                <div class="section-header">
+                    <h6>🎨 Theme Colors</h6>
+                    <p>Choose your preferred color scheme</p>
                 </div>
-                <div class="color-section">
-                    <label>Gradient Colors</label>
-                    <div class="color-swatches gradient-colors">
-                        <div class="color-swatch gradient dark-blue" data-color="darkblue-gradient" onclick="changeTopBarColor('darkblue-gradient')"></div>
-                        <div class="color-swatch gradient light-blue" data-color="lightblue-gradient" onclick="changeTopBarColor('lightblue-gradient')"></div>
-                        <div class="color-swatch gradient purple" data-color="purple-gradient" onclick="changeTopBarColor('purple-gradient')"></div>
-                        <div class="color-swatch gradient teal" data-color="teal-gradient" onclick="changeTopBarColor('teal-gradient')"></div>
-                        <div class="color-swatch gradient orange" data-color="orange-gradient" onclick="changeTopBarColor('orange-gradient')"></div>
-                        <div class="color-swatch gradient red" data-color="red-gradient" onclick="changeTopBarColor('red-gradient')"></div>
+                <div class="theme-colors-grid">
+                    <div class="theme-color-option active" data-theme="teal" onclick="setThemeColor('teal')">
+                        <div class="theme-color-swatch teal"></div>
+                        <span>Teal</span>
+                    </div>
+                    <div class="theme-color-option" data-theme="red" onclick="setThemeColor('red')">
+                        <div class="theme-color-swatch red"></div>
+                        <span>Red</span>
+                    </div>
+                    <div class="theme-color-option" data-theme="purple" onclick="setThemeColor('purple')">
+                        <div class="theme-color-swatch purple"></div>
+                        <span>Purple</span>
+                    </div>
+                    <div class="theme-color-option" data-theme="blue" onclick="setThemeColor('blue')">
+                        <div class="theme-color-swatch blue"></div>
+                        <span>Blue</span>
+                    </div>
+                    <div class="theme-color-option" data-theme="green" onclick="setThemeColor('green')">
+                        <div class="theme-color-swatch green"></div>
+                        <span>Green</span>
+                    </div>
+                    <div class="theme-color-option" data-theme="orange-red" onclick="setThemeColor('orange-red')">
+                        <div class="theme-color-swatch orange-red"></div>
+                        <span>Orange Red</span>
+                    </div>
+                    <div class="theme-color-option" data-theme="black" onclick="setThemeColor('black')">
+                        <div class="theme-color-swatch black"></div>
+                        <span>Black</span>
                     </div>
                 </div>
             </div>
             
             <div class="theme-section">
-                <h6>Page Header Color</h6>
-                <div class="color-section">
-                    <label>Solid Colors</label>
-                    <div class="color-swatches solid-colors">
-                        <div class="color-swatch white" data-color="white" onclick="changePageHeaderColor('white')"></div>
-                        <div class="color-swatch light-green" data-color="lightgreen" onclick="changePageHeaderColor('lightgreen')"></div>
-                        <div class="color-swatch dark-gray" data-color="darkgray" onclick="changePageHeaderColor('darkgray')"></div>
-                        <div class="color-swatch black" data-color="black" onclick="changePageHeaderColor('black')"></div>
-                        <div class="color-swatch blue" data-color="blue" onclick="changePageHeaderColor('blue')"></div>
-                        <div class="color-swatch purple" data-color="purple" onclick="changePageHeaderColor('purple')"></div>
-                        <div class="color-swatch teal" data-color="teal" onclick="changePageHeaderColor('teal')"></div>
-                    </div>
+                <div class="section-header">
+                    <h6>🎯 Top Bar Color</h6>
+                    <p>Customize the top navigation bar</p>
                 </div>
-                <div class="color-section">
-                    <label>Gradient Colors</label>
-                    <div class="color-swatches gradient-colors">
-                        <div class="color-swatch gradient dark-blue" data-color="darkblue-gradient" onclick="changePageHeaderColor('darkblue-gradient')"></div>
-                        <div class="color-swatch gradient light-blue" data-color="lightblue-gradient" onclick="changePageHeaderColor('lightblue-gradient')"></div>
-                        <div class="color-swatch gradient purple" data-color="purple-gradient" onclick="changePageHeaderColor('purple-gradient')"></div>
-                        <div class="color-swatch gradient teal" data-color="teal-gradient" onclick="changePageHeaderColor('teal-gradient')"></div>
-                        <div class="color-swatch gradient orange" data-color="orange-gradient" onclick="changePageHeaderColor('orange-gradient')"></div>
-                        <div class="color-swatch gradient red" data-color="red-gradient" onclick="changePageHeaderColor('red-gradient')"></div>
-                    </div>
+                <div class="color-swatches-grid">
+                    <div class="color-swatch white" data-color="white" onclick="setTopBarColor('white')" title="White"></div>
+                    <div class="color-swatch light-green active" data-color="lightgreen" onclick="setTopBarColor('lightgreen')" title="Light Green"></div>
+                    <div class="color-swatch dark-gray" data-color="darkgray" onclick="setTopBarColor('darkgray')" title="Dark Gray"></div>
+                    <div class="color-swatch black" data-color="black" onclick="setTopBarColor('black')" title="Black"></div>
+                    <div class="color-swatch blue" data-color="blue" onclick="setTopBarColor('blue')" title="Blue"></div>
+                    <div class="color-swatch purple" data-color="purple" onclick="setTopBarColor('purple')" title="Purple"></div>
+                    <div class="color-swatch teal" data-color="teal" onclick="setTopBarColor('teal')" title="Teal"></div>
                 </div>
             </div>
+            
             
             
             <!-- REMOVED SECTIONS AS REQUESTED -->
@@ -434,160 +911,68 @@ function createFloatingGearButton() {
             
             <!-- Form Content Style section removed -->
             
+            
             <div class="theme-section">
                 <h6>Sidebar Color</h6>
                 <div class="color-section">
                     <label>Solid Colors</label>
                     <div class="color-swatches solid-colors">
-                        <div class="color-swatch white" data-color="sidebar-white" onclick="changeSidebarColor('sidebar-white')"></div>
-                        <div class="color-swatch light-green active" data-color="sidebar-lightgreen" onclick="changeSidebarColor('sidebar-lightgreen')"></div>
-                        <div class="color-swatch dark-gray" data-color="sidebar-darkgray" onclick="changeSidebarColor('sidebar-darkgray')"></div>
-                        <div class="color-swatch black" data-color="sidebar-black" onclick="changeSidebarColor('sidebar-black')"></div>
-                        <div class="color-swatch blue" data-color="sidebar-blue" onclick="changeSidebarColor('sidebar-blue')"></div>
-                        <div class="color-swatch purple" data-color="sidebar-purple" onclick="changeSidebarColor('sidebar-purple')"></div>
-                        <div class="color-swatch teal" data-color="sidebar-teal" onclick="changeSidebarColor('sidebar-teal')"></div>
-                    </div>
-                </div>
-                <div class="color-section">
-                    <label>Gradient Colors</label>
-                    <div class="color-swatches gradient-colors">
-                        <div class="color-swatch gradient dark-blue" data-color="sidebar-darkblue-gradient" onclick="changeSidebarColor('sidebar-darkblue-gradient')"></div>
-                        <div class="color-swatch gradient light-blue" data-color="sidebar-lightblue-gradient" onclick="changeSidebarColor('sidebar-lightblue-gradient')"></div>
-                        <div class="color-swatch gradient purple" data-color="sidebar-purple-gradient" onclick="changeSidebarColor('sidebar-purple-gradient')"></div>
-                        <div class="color-swatch gradient teal" data-color="sidebar-teal-gradient" onclick="changeSidebarColor('sidebar-teal-gradient')"></div>
-                        <div class="color-swatch gradient orange" data-color="sidebar-orange-gradient" onclick="changeSidebarColor('sidebar-orange-gradient')"></div>
-                        <div class="color-swatch gradient red" data-color="sidebar-red-gradient" onclick="changeSidebarColor('sidebar-red-gradient')"></div>
+                        <div class="color-swatch white" data-color="sidebar-white" onclick="setSidebarColor('sidebar-white')"></div>
+                        <div class="color-swatch light-green active" data-color="sidebar-lightgreen" onclick="setSidebarColor('sidebar-lightgreen')"></div>
+                        <div class="color-swatch dark-gray" data-color="sidebar-darkgray" onclick="setSidebarColor('sidebar-darkgray')"></div>
+                        <div class="color-swatch black" data-color="sidebar-black" onclick="setSidebarColor('sidebar-black')"></div>
+                        <div class="color-swatch blue" data-color="sidebar-blue" onclick="setSidebarColor('sidebar-blue')"></div>
+                        <div class="color-swatch purple" data-color="sidebar-purple" onclick="setSidebarColor('sidebar-purple')"></div>
+                        <div class="color-swatch teal" data-color="sidebar-teal" onclick="setSidebarColor('sidebar-teal')"></div>
                     </div>
                 </div>
             </div>
             
-            <div class="theme-section">
-                <h6>Sidebar Background</h6>
-                <div class="background-section">
-                    <label>Background Images</label>
-                    <div class="background-thumbnails">
-                        <div class="background-thumb active" data-bg="dark-forest" onclick="changeSidebarBackground('dark-forest')">
-                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150&h=100&fit=crop" alt="Dark Forest">
-                            <div class="checkmark">✓</div>
-                        </div>
-                        <div class="background-thumb" data-bg="city-skyline" onclick="changeSidebarBackground('city-skyline')">
-                            <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=150&h=100&fit=crop" alt="City Skyline">
-                            <div class="checkmark">✓</div>
-                        </div>
-                        <div class="background-thumb" data-bg="abstract-dark" onclick="changeSidebarBackground('abstract-dark')">
-                            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=100&fit=crop" alt="Abstract Dark">
-                            <div class="checkmark">✓</div>
-                        </div>
-                        <div class="background-thumb" data-bg="mountain-night" onclick="changeSidebarBackground('mountain-night')">
-                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=100&fit=crop" alt="Mountain Night">
-                            <div class="checkmark">✓</div>
-                        </div>
-                        <div class="background-thumb" data-bg="ocean-dark" onclick="changeSidebarBackground('ocean-dark')">
-                            <img src="https://images.unsplash.com/photo-1514894743437-4c2a81c6c041?w=150&h=100&fit=crop" alt="Ocean Dark">
-                            <div class="checkmark">✓</div>
-                        </div>
-                        <div class="background-thumb" data-bg="space-dark" onclick="changeSidebarBackground('space-dark')">
-                            <img src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=150&h=100&fit=crop" alt="Space Dark">
-                            <div class="checkmark">✓</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Sidebar Background Images section removed as requested -->
+            
+            
+            <!-- Font Family section removed as requested -->
             
             <div class="theme-section">
-                <h6>Sidebar Text & Icon Colors</h6>
-                <div class="text-color-section">
-                    <label>Text Color</label>
-                    <div class="text-color-options">
-                        <div class="text-color-option active" data-text-color="white" onclick="changeSidebarTextColor('white')">
-                            <div class="text-color-preview white-text"></div>
-                            <span>White</span>
+                <h6>Theme Mode</h6>
+                <div class="theme-mode-section">
+                    <div class="theme-mode-options">
+                        <div class="theme-mode-option active" data-mode="light" onclick="setThemeMode('light')">
+                            <div class="theme-mode-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
                         </div>
-                        <div class="text-color-option" data-text-color="black" onclick="changeSidebarTextColor('black')">
-                            <div class="text-color-preview black-text"></div>
-                            <span>Black</span>
+                            <span>Light</span>
                         </div>
-                        <div class="text-color-option" data-text-color="blue" onclick="changeSidebarTextColor('blue')">
-                            <div class="text-color-preview blue-text"></div>
-                            <span>Blue</span>
+                        <div class="theme-mode-option" data-mode="dark" onclick="setThemeMode('dark')">
+                            <div class="theme-mode-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
                         </div>
-                        <div class="text-color-option" data-text-color="green" onclick="changeSidebarTextColor('green')">
-                            <div class="text-color-preview green-text"></div>
-                            <span>Green</span>
+                            <span>Dark</span>
                         </div>
-                        <div class="text-color-option" data-text-color="purple" onclick="changeSidebarTextColor('purple')">
-                            <div class="text-color-preview purple-text"></div>
-                            <span>Purple</span>
+                        <div class="theme-mode-option" data-mode="system" onclick="setThemeMode('system')">
+                            <div class="theme-mode-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
                         </div>
-                        <div class="text-color-option" data-text-color="orange" onclick="changeSidebarTextColor('orange')">
-                            <div class="text-color-preview orange-text"></div>
-                            <span>Orange</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="icon-color-section">
-                    <label>Icon Color</label>
-                    <div class="icon-color-options">
-                        <div class="icon-color-option active" data-icon-color="white" onclick="changeSidebarIconColor('white')">
-                            <div class="icon-color-preview white-icon"></div>
-                            <span>White</span>
-                        </div>
-                        <div class="icon-color-option" data-icon-color="black" onclick="changeSidebarIconColor('black')">
-                            <div class="icon-color-preview black-icon"></div>
-                            <span>Black</span>
-                        </div>
-                        <div class="icon-color-option" data-icon-color="blue" onclick="changeSidebarIconColor('blue')">
-                            <div class="icon-color-preview blue-icon"></div>
-                            <span>Blue</span>
-                        </div>
-                        <div class="icon-color-option" data-icon-color="green" onclick="changeSidebarIconColor('green')">
-                            <div class="icon-color-preview green-icon"></div>
-                            <span>Green</span>
-                        </div>
-                        <div class="icon-color-option" data-icon-color="purple" onclick="changeSidebarIconColor('purple')">
-                            <div class="icon-color-preview purple-icon"></div>
-                            <span>Purple</span>
-                        </div>
-                        <div class="icon-color-option" data-icon-color="orange" onclick="changeSidebarIconColor('orange')">
-                            <div class="icon-color-preview orange-icon"></div>
-                            <span>Orange</span>
+                            <span>System</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="theme-section">
-                <h6>Sidebar Font & Layout</h6>
-                <div class="font-section">
-                    <label>Font Family</label>
-                    <div class="font-options">
-                        <div class="font-option active" data-font="default" onclick="changeSidebarFont('default')">
-                            <div class="font-preview default-font">Aa</div>
-                            <span>Default</span>
-                        </div>
-                        <div class="font-option" data-font="roboto" onclick="changeSidebarFont('roboto')">
-                            <div class="font-preview roboto-font">Aa</div>
-                            <span>Roboto</span>
-                        </div>
-                        <div class="font-option" data-font="opensans" onclick="changeSidebarFont('opensans')">
-                            <div class="font-preview opensans-font">Aa</div>
-                            <span>Open Sans</span>
-                        </div>
-                        <div class="font-option" data-font="lato" onclick="changeSidebarFont('lato')">
-                            <div class="font-preview lato-font">Aa</div>
-                            <span>Lato</span>
-                        </div>
-                        <div class="font-option" data-font="montserrat" onclick="changeSidebarFont('montserrat')">
-                            <div class="font-preview montserrat-font">Aa</div>
-                            <span>Montserrat</span>
-                        </div>
-                        <div class="font-option" data-font="poppins" onclick="changeSidebarFont('poppins')">
-                            <div class="font-preview poppins-font">Aa</div>
-                            <span>Poppins</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Layout Style section removed as requested -->
             </div>
         </div>
     `;
@@ -637,7 +1022,7 @@ function hideSettingsPanel() {
 }
 
 // Change top bar color function
-function changeTopBarColor(color) {
+function setTopBarColor(color) {
     // Remove active class from all color swatches
     document.querySelectorAll('.theme-section:nth-child(1) .color-swatch').forEach(swatch => {
         swatch.classList.remove('active');
@@ -766,50 +1151,6 @@ function applyTopBarStyles(color) {
             backgroundColor = '#0dcaf0';
             textColor = getContrastColor(backgroundColor);
             break;
-        case 'darkblue-gradient':
-            backgroundColor = 'linear-gradient(135deg, #1e3c72, #2a5298)';
-            textColor = '#ffffff'; // Dark gradient = white text
-            break;
-        case 'lightblue-gradient':
-            backgroundColor = 'linear-gradient(135deg, #74b9ff, #0984e3)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'purple-gradient':
-            backgroundColor = 'linear-gradient(135deg, #a29bfe, #6c5ce7)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'teal-gradient':
-            backgroundColor = 'linear-gradient(135deg, #00b894, #00cec9)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'orange-gradient':
-            backgroundColor = 'linear-gradient(135deg, #fdcb6e, #e17055)';
-            textColor = '#333333'; // Light gradient = dark text
-            break;
-        case 'red-gradient':
-            backgroundColor = 'linear-gradient(135deg, #fd79a8, #e84393)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'green-gradient':
-            backgroundColor = 'linear-gradient(135deg, #00b894, #00a085)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'sunset-gradient':
-            backgroundColor = 'linear-gradient(135deg, #ff6b6b, #ffa726)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'ocean-gradient':
-            backgroundColor = 'linear-gradient(135deg, #667eea, #764ba2)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'forest-gradient':
-            backgroundColor = 'linear-gradient(135deg, #134e5e, #71b280)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
-        case 'fire-gradient':
-            backgroundColor = 'linear-gradient(135deg, #ff416c, #ff4b2b)';
-            textColor = '#ffffff'; // Medium gradient = white text
-            break;
         case 'default':
         default:
             backgroundColor = '#ffffff';
@@ -849,7 +1190,9 @@ function applyTopBarStyles(color) {
             }
             
             .layout-top-section .navbar-nav .nav-link:hover,
-            .layout-top-section .navbar-nav .dropdown-toggle:hover {
+            .layout-top-section .navbar-nav .dropdown-toggle:hover ,
+            .layout-top-section .navbar-nav .notifications-icon
+            {
                 color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'} !important;
             }
         `;
@@ -881,7 +1224,8 @@ function applyTopBarStyles(color) {
             }
             
             .layout-top-section .navbar-nav .nav-link:hover,
-            .layout-top-section .navbar-nav .dropdown-toggle:hover {
+            .layout-top-section .navbar-nav .dropdown-toggle:hover ,
+            layout-top-section .navbar-nav .notifications-icon{
                 color: ${textColor === '#ffffff' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'} !important;
             }
         `;
@@ -1065,205 +1409,13 @@ function applyTopBarStyles(color) {
     }, 100);
 }
 
-// Change page header color function
-function changePageHeaderColor(color) {
-    // Remove active class from all page header color swatches
-    document.querySelectorAll('.theme-section:nth-child(2) .color-swatch').forEach(swatch => {
-        swatch.classList.remove('active');
-    });
-    
-    // Add active class to clicked swatch
-    event.target.classList.add('active');
-    
-    // Apply color to page header
-    applyPageHeaderStyles(color);
-    
-    // Save to localStorage
-    localStorage.setItem('pageHeaderColor', color);
-}
-
-// Apply CSS styles for page header colors
-function applyPageHeaderStyles(color) {
-    let styles = '';
-    
-    switch(color) {
-        case 'white':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #ffffff !important; 
-                    color: #333333 !important; 
-                }
-            `;
-            break;
-        case 'lightgreen':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #28a745 !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'darkgray':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #343a40 !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'black':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #000000 !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'blue':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #007bff !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'purple':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #6f42c1 !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'teal':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background-color: #20c997 !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'darkblue-gradient':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background: linear-gradient(135deg, #1e3c72, #2a5298) !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'lightblue-gradient':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background: linear-gradient(135deg, #74b9ff, #0984e3) !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'purple-gradient':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background: linear-gradient(135deg, #a29bfe, #6c5ce7) !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'teal-gradient':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background: linear-gradient(135deg, #00b894, #00cec9) !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'orange-gradient':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background: linear-gradient(135deg, #fdcb6e, #e17055) !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-        case 'red-gradient':
-            styles = `
-                .page-head, .page-head *, .page-head .container,
-                .page-head .row, .page-head .page-head-content,
-                .page-head .page-title, .page-head .title-area,
-                .page-head .title-text, .page-head .page-actions,
-                .page-head .standard-actions, .page-head .btn {
-                    background: linear-gradient(135deg, #fd79a8, #e84393) !important; 
-                    color: #ffffff !important; 
-                }
-            `;
-            break;
-    }
-    
-    // Remove existing dynamic styles
-    const existingStyle = document.getElementById('dynamic-pageheader-styles');
-    if (existingStyle) {
-        existingStyle.remove();
-    }
-    
-    // Add new styles
-    const styleElement = document.createElement('style');
-    styleElement.id = 'dynamic-pageheader-styles';
-    styleElement.textContent = styles;
-    document.head.appendChild(styleElement);
-}
 
 
 // Change main content color function
 // REMOVED: changeMainContentColor function
 
 // REMOVED: applyMainContentStyles function
-/*
+
 function applyMainContentStyles(color) {
     let styles = '';
     
@@ -1464,7 +1616,7 @@ function applyMainContentStyles(color) {
     styleElement.textContent = styles;
     document.head.appendChild(styleElement);
 }
-*/
+
 
 // Change main content layout function
 function changeMainContentLayout(layout) {
@@ -1728,7 +1880,6 @@ function applyMainContentFont(font) {
 }
 
 // REMOVED: changeMainContentTextColor function
-/*
 function changeMainContentTextColor(color) {
     // Remove active class from all text color swatches
     document.querySelectorAll('.theme-section:nth-child(4) .color-swatch').forEach(swatch => {
@@ -1744,10 +1895,10 @@ function changeMainContentTextColor(color) {
     // Save to localStorage
     localStorage.setItem('mainContentTextColor', color);
 }
-*/
+
 
 // REMOVED: applyMainContentTextStyles function
-/*
+
 function applyMainContentTextStyles(color) {
             let styles = '';
             
@@ -1886,10 +2037,10 @@ function applyMainContentTextStyles(color) {
             styleElement.textContent = styles;
             document.head.appendChild(styleElement);
         }
-*/
+
 
 // REMOVED: changeFormContentStyle function
-/*
+
 function changeFormContentStyle(color, type) {
             // Remove active class from all swatches in the specific color section
             const formSection = document.querySelector('.theme-section:nth-child(5)');
@@ -1918,10 +2069,9 @@ function changeFormContentStyle(color, type) {
             // Save to localStorage
             localStorage.setItem(`formContent${type.charAt(0).toUpperCase() + type.slice(1)}`, color);
         }
-*/
 
 // REMOVED: applyFormContentStyles function
-/*
+
 function applyFormContentStyles(color, type) {
             let styles = '';
             let colorValue = '';
@@ -2067,7 +2217,7 @@ function applyFormContentStyles(color, type) {
         }
 
 // Change sidebar color function
-function changeSidebarColor(color) {
+function setSidebarColor(color) {
     // Remove active class from all sidebar color swatches
     document.querySelectorAll('.theme-section:nth-child(2) .color-swatch').forEach(swatch => {
         swatch.classList.remove('active');
@@ -2076,24 +2226,52 @@ function changeSidebarColor(color) {
     // Add active class to clicked swatch
     event.target.classList.add('active');
     
-    // Apply color to sidebar
-    const sidebar = document.querySelector('.sidebar') || document.querySelector('.nav-sidebar') || document.querySelector('.sidebar-nav') || document.querySelector('.sidebar-menu');
+    // Apply color to sidebar - ERPNext Specific Detection
+    const sidebarSelectors = [
+        '.web-sidebar', '.sidebar-column', '.sidebar-items',
+        '.sidebar', '.nav-sidebar', '.sidebar-nav', '.sidebar-menu',
+        '.col-lg-2.layout-side-section', '.desk-sidebar', '.list-sidebar',
+        '.layout-side-section', '.sidebar-container'
+    ];
+    
+    let sidebar = null;
+    for (const selector of sidebarSelectors) {
+        sidebar = document.querySelector(selector);
+        if (sidebar) {
+            console.log(`🎨 Found sidebar with selector: ${selector}`);
+            break;
+        }
+    }
     
     if (sidebar) {
+        console.log(`🎨 Applying color ${color} to sidebar:`, sidebar.className);
+        
         // Remove existing color classes
-        sidebar.classList.remove('sidebar-white', 'sidebar-lightgreen', 'sidebar-darkgray', 'sidebar-black', 'sidebar-blue', 'sidebar-purple', 'sidebar-teal', 'sidebar-darkblue-gradient', 'sidebar-lightblue-gradient', 'sidebar-purple-gradient', 'sidebar-teal-gradient', 'sidebar-orange-gradient', 'sidebar-red-gradient');
+        const colorClasses = ['sidebar-white', 'sidebar-lightgreen', 'sidebar-darkgray', 'sidebar-black', 'sidebar-blue', 'sidebar-purple', 'sidebar-teal', 'sidebar-darkblue-gradient', 'sidebar-lightblue-gradient', 'sidebar-purple-gradient', 'sidebar-teal-gradient', 'sidebar-orange-gradient', 'sidebar-red-gradient'];
+        colorClasses.forEach(cls => sidebar.classList.remove(cls));
         
         // Add new color class
         sidebar.classList.add(color);
         
+        // Also apply to parent container if it exists
+        const parentContainer = sidebar.closest('.col-lg-2') || sidebar.closest('.layout-side-section');
+        if (parentContainer) {
+            colorClasses.forEach(cls => parentContainer.classList.remove(cls));
+            parentContainer.classList.add(color);
+            console.log(`🎨 Also applied color to parent container:`, parentContainer.className);
+        }
+        
         // Save to localStorage
         localStorage.setItem('sidebarColor', color);
+        
+        console.log(`✅ Color ${color} applied successfully!`);
+    } else {
+        console.log('❌ Sidebar not found with any selector');
     }
     
     // Apply CSS styles based on color
     applySidebarStyles(color);
 }
-*/
 
 // Apply CSS styles for sidebar colors
 function applySidebarStyles(color) {
@@ -2106,7 +2284,7 @@ function applySidebarStyles(color) {
         case 'sidebar-white':
             styles = `
                 .col-lg-2.layout-side-section { 
-                    background-color: rgba(255, 255, 255, 0.4) !important; 
+                    background-color: #ffffff !important; 
                     color: #333333 !important; 
                     position: relative !important;
                     width: 100% !important;
@@ -2114,21 +2292,11 @@ function applySidebarStyles(color) {
                     margin: 0 !important;
                     padding: 0 !important;
                 }
-                .col-lg-2.layout-side-section::after {
-                    content: '' !important;
-                    position: absolute !important;
-                    top: 0 !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    bottom: 0 !important;
-                    background-color: rgba(255, 255, 255, 0.1) !important;
-                    z-index: 1 !important;
-                }
                 .col-lg-2.layout-side-section * {
                     color: #333333 !important;
                 }
                 .desk-sidebar, .sidebar-menu, .list-sidebar { 
-                    background-color: rgba(255, 255, 255, 0.4) !important; 
+                    background-color: #ffffff !important; 
                     color: #333333 !important; 
                     position: relative !important;
                     width: 100% !important;
@@ -2158,10 +2326,10 @@ function applySidebarStyles(color) {
                     color: #333333 !important;
                 }
                 .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon {
-                    color: #333333 !important;
+                    color: #ffffff !important;
                 }
                 .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
-                    background-color: rgba(255, 255, 255, 0.4) !important; 
+                    background-color: #ffffff !important; 
                     color: #333333 !important; 
                     position: relative !important;
                     width: 100% !important;
@@ -2186,7 +2354,7 @@ function applySidebarStyles(color) {
         case 'sidebar-lightgreen':
             styles = `
                 .col-lg-2.layout-side-section { 
-                    background-color: rgba(40, 167, 69, 0.4) !important; 
+                    background-color: #28a745 !important; 
                     color: #ffffff !important; 
                     position: relative !important;
                     width: 100% !important;
@@ -2194,21 +2362,44 @@ function applySidebarStyles(color) {
                     margin: 0 !important;
                     padding: 0 !important;
                 }
-                .col-lg-2.layout-side-section::after {
-                    content: '' !important;
-                    position: absolute !important;
-                    top: 0 !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    bottom: 0 !important;
-                    background-color: rgba(40, 167, 69, 0.1) !important;
-                    z-index: 1 !important;
-                }
                 .col-lg-2.layout-side-section * {
                     color: #ffffff !important;
                 }
+                .desk-sidebar, .sidebar-menu, .list-sidebar { 
+                    background-color: #28a745 !important; 
+                    color: #ffffff !important; 
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                .desk-sidebar *, .sidebar-menu *, .list-sidebar *,
+                .desk-sidebar a, .sidebar-menu a, .list-sidebar a,
+                .desk-sidebar span, .sidebar-menu span, .list-sidebar span,
+                .desk-sidebar div, .sidebar-menu div, .list-sidebar div,
+                .desk-sidebar li, .sidebar-menu li, .list-sidebar li,
+                .desk-sidebar .item-anchor, .sidebar-menu .item-anchor, .list-sidebar .item-anchor,
+                .desk-sidebar .sidebar-item-label, .sidebar-menu .sidebar-item-label, .list-sidebar .sidebar-item-label {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected, .standard-sidebar-item.selected {
+                    background-color: rgba(255, 255, 255, 0.2) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    margin: 2px 8px !important;
+                }
+                .desk-sidebar-item.selected .item-anchor, .standard-sidebar-item.selected .item-anchor {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon {
+                    color: #ffffff !important;
+                }
                 .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
-                    background-color: rgba(40, 167, 69, 0.4) !important; 
+                    background-color: #28a745 !important; 
                     color: #ffffff !important; 
                     position: relative !important;
                     width: 100% !important;
@@ -2223,20 +2414,99 @@ function applySidebarStyles(color) {
                 .sidebar li, .nav-sidebar li, .sidebar-nav li, .sidebar-menu li,
                 .sidebar .nav-link, .nav-sidebar .nav-link, .sidebar-nav .nav-link, .sidebar-menu .nav-link,
                 .sidebar .nav-item, .nav-sidebar .nav-item, .sidebar-nav .nav-item, .sidebar-menu .nav-item {
+                    color: #333333 !important;
+                }
+                .desk-sidebar-item, .standard-sidebar-item, .sidebar-item-container {
+                    background-color: transparent !important;
+                    color: #333333 !important;
+                    margin: 2px 8px !important;
+                    border-radius: 8px !important;
+                    transition: all 0.3s ease !important;
+                }
+                .desk-sidebar-item a, .standard-sidebar-item a, .sidebar-item-container a {
+                    color: #333333 !important;
+                    padding: 12px 16px !important;
+                    display: block !important;
+                    text-decoration: none !important;
+                    border-radius: 8px !important;
+                    transition: all 0.3s ease !important;
+                }
+                .desk-sidebar-item:hover, .standard-sidebar-item:hover, .sidebar-item-container:hover {
+                    background-color: rgba(40, 167, 69, 0.1) !important;
+                }
+                .desk-sidebar-item:hover a, .standard-sidebar-item:hover a, .sidebar-item-container:hover a {
+                    color: #28a745 !important;
+                }
+                .desk-sidebar-item.selected, .standard-sidebar-item.selected, .sidebar-item-container.selected {
+                    background-color: rgba(40, 167, 69, 0.9) !important;
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected a, .standard-sidebar-item.selected a, .sidebar-item-container.selected a {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon, .sidebar-item-container.selected .sidebar-item-icon {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label, .sidebar-item-container.selected .sidebar-item-label {
                     color: #ffffff !important;
                 }
                 .sidebar .active, .nav-sidebar .active, .sidebar-nav .active, .sidebar-menu .active,
                 .sidebar .nav-item.active, .nav-sidebar .nav-item.active, .sidebar-nav .nav-item.active, .sidebar-menu .nav-item.active {
-background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #333333 !important;
+                    background-color: rgba(40, 167, 69, 0.9) !important;
+                    color: #ffffff !important;
                 }
             `;
             break;
         case 'sidebar-darkgray':
             styles = `
-                .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
-                    background-color: rgba(52, 58, 64, 0.4) !important; 
+                .col-lg-2.layout-side-section { 
+                    background-color: #343a40 !important; 
                     color: #ffffff !important; 
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                .col-lg-2.layout-side-section * {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar, .sidebar-menu, .list-sidebar { 
+                    background-color: #343a40 !important; 
+                    color: #ffffff !important; 
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                .desk-sidebar *, .sidebar-menu *, .list-sidebar *,
+                .desk-sidebar a, .sidebar-menu a, .list-sidebar a,
+                .desk-sidebar span, .sidebar-menu span, .list-sidebar span,
+                .desk-sidebar div, .sidebar-menu div, .list-sidebar div,
+                .desk-sidebar li, .sidebar-menu li, .list-sidebar li,
+                .desk-sidebar .item-anchor, .sidebar-menu .item-anchor, .list-sidebar .item-anchor,
+                .desk-sidebar .sidebar-item-label, .sidebar-menu .sidebar-item-label, .list-sidebar .sidebar-item-label {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected, .standard-sidebar-item.selected {
+                    background-color: rgba(255, 255, 255, 0.2) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    margin: 2px 8px !important;
+                }
+                .desk-sidebar-item.selected .item-anchor, .standard-sidebar-item.selected .item-anchor {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon {
+                    color: #ffffff !important;
+                }
+                .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
+                    background-color: #343a40 !important; 
+                    color: #ffffff !important;
                     position: relative !important;
                     width: 100% !important;
                     height: 100vh !important;
@@ -2254,8 +2524,8 @@ background-color: rgba(255, 255, 255, 0.9) !important;
                 }
                 .sidebar .active, .nav-sidebar .active, .sidebar-nav .active, .sidebar-menu .active,
                 .sidebar .nav-item.active, .nav-sidebar .nav-item.active, .sidebar-nav .nav-item.active, .sidebar-menu .nav-item.active {
-background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #333333 !important;
+                    background-color: rgba(255, 255, 255, 0.2) !important;
+                    color: #ffffff !important;
                 }
             `;
             break;
@@ -2288,9 +2558,18 @@ background-color: rgba(255, 255, 255, 0.9) !important;
             break;
         case 'sidebar-blue':
             styles = `
+                .col-lg-2.layout-side-section { 
+                    background-color: transparent !important; 
+                    color: #333333 !important; 
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
                 .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
-                    background-color: rgba(0, 123, 255, 0.4) !important; 
-                    color: #ffffff !important; 
+                    background-color: transparent !important; 
+                    color: #333333 !important; 
                     position: relative !important;
                     width: 100% !important;
                     height: 100vh !important;
@@ -2304,19 +2583,98 @@ background-color: rgba(255, 255, 255, 0.9) !important;
                 .sidebar li, .nav-sidebar li, .sidebar-nav li, .sidebar-menu li,
                 .sidebar .nav-link, .nav-sidebar .nav-link, .sidebar-nav .nav-link, .sidebar-menu .nav-link,
                 .sidebar .nav-item, .nav-sidebar .nav-item, .sidebar-nav .nav-item, .sidebar-menu .nav-item {
+                    color: #333333 !important;
+                }
+                .desk-sidebar-item, .standard-sidebar-item, .sidebar-item-container {
+                    background-color: transparent !important;
+                    color: #333333 !important;
+                    margin: 2px 8px !important;
+                    border-radius: 8px !important;
+                    transition: all 0.3s ease !important;
+                }
+                .desk-sidebar-item a, .standard-sidebar-item a, .sidebar-item-container a {
+                    color: #333333 !important;
+                    padding: 12px 16px !important;
+                    display: block !important;
+                    text-decoration: none !important;
+                    border-radius: 8px !important;
+                    transition: all 0.3s ease !important;
+                }
+                .desk-sidebar-item:hover, .standard-sidebar-item:hover, .sidebar-item-container:hover {
+                    background-color: rgba(0, 123, 255, 0.1) !important;
+                }
+                .desk-sidebar-item:hover a, .standard-sidebar-item:hover a, .sidebar-item-container:hover a {
+                    color: #007bff !important;
+                }
+                .desk-sidebar-item.selected, .standard-sidebar-item.selected, .sidebar-item-container.selected {
+                    background-color: rgba(0, 123, 255, 0.9) !important;
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected a, .standard-sidebar-item.selected a, .sidebar-item-container.selected a {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon, .sidebar-item-container.selected .sidebar-item-icon {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label, .sidebar-item-container.selected .sidebar-item-label {
                     color: #ffffff !important;
                 }
                 .sidebar .active, .nav-sidebar .active, .sidebar-nav .active, .sidebar-menu .active,
                 .sidebar .nav-item.active, .nav-sidebar .nav-item.active, .sidebar-nav .nav-item.active, .sidebar-menu .nav-item.active {
-background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #333333 !important;
+                    background-color: rgba(0, 123, 255, 0.9) !important;
+                    color: #ffffff !important;
                 }
             `;
             break;
         case 'sidebar-purple':
             styles = `
+                .col-lg-2.layout-side-section { 
+                    background-color: #9C27B0 !important; 
+                    color: #ffffff !important; 
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                .col-lg-2.layout-side-section * {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar, .sidebar-menu, .list-sidebar { 
+                    background-color: #9C27B0 !important; 
+                    color: #ffffff !important; 
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                .desk-sidebar *, .sidebar-menu *, .list-sidebar *,
+                .desk-sidebar a, .sidebar-menu a, .list-sidebar a,
+                .desk-sidebar span, .sidebar-menu span, .list-sidebar span,
+                .desk-sidebar div, .sidebar-menu div, .list-sidebar div,
+                .desk-sidebar li, .sidebar-menu li, .list-sidebar li,
+                .desk-sidebar .item-anchor, .sidebar-menu .item-anchor, .list-sidebar .item-anchor,
+                .desk-sidebar .sidebar-item-label, .sidebar-menu .sidebar-item-label, .list-sidebar .sidebar-item-label {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected, .standard-sidebar-item.selected {
+                    background-color: rgba(255, 255, 255, 0.2) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    margin: 2px 8px !important;
+                }
+                .desk-sidebar-item.selected .item-anchor, .standard-sidebar-item.selected .item-anchor {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label {
+                    color: #ffffff !important;
+                }
+                .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon {
+                    color: #ffffff !important;
+                }
                 .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
-                    background-color: rgba(111, 66, 193, 0.4) !important; 
+                    background-color: #9C27B0 !important; 
                     color: #ffffff !important; 
                     position: relative !important;
                     width: 100% !important;
@@ -2335,8 +2693,8 @@ background-color: rgba(255, 255, 255, 0.9) !important;
                 }
                 .sidebar .active, .nav-sidebar .active, .sidebar-nav .active, .sidebar-menu .active,
                 .sidebar .nav-item.active, .nav-sidebar .nav-item.active, .sidebar-nav .nav-item.active, .sidebar-menu .nav-item.active {
-background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #333333 !important;
+                    background-color: rgba(255, 255, 255, 0.2) !important;
+                    color: #ffffff !important;
                 }
             `;
             break;
@@ -2601,7 +2959,9 @@ background-color: rgba(255, 255, 255, 0.9) !important;
     document.head.appendChild(styleElement);
 }
 
-// Change sidebar background function
+// REMOVED: Change sidebar background function - Background Images section removed
+
+
 function changeSidebarBackground(bgType) {
     // Remove active class from all background thumbs
     document.querySelectorAll('.background-thumb').forEach(thumb => {
@@ -2629,186 +2989,27 @@ function changeSidebarBackground(bgType) {
     applySidebarBackgroundStyles(bgType);
 }
 
-// Apply CSS styles for sidebar backgrounds
-function applySidebarBackgroundStyles(bgType) {
-    let bgImage = '';
+
+// Change sidebar icon color function
+function changeSidebarIconColor(color) {
+    // Remove active class from all icon color options
+    document.querySelectorAll('.icon-color-option').forEach(option => {
+        option.classList.remove('active');
+    });
     
-    switch(bgType) {
-        case 'dark-forest':
-            bgImage = 'url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop")';
-            break;
-        case 'city-skyline':
-            bgImage = 'url("https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&h=600&fit=crop")';
-            break;
-        case 'abstract-dark':
-            bgImage = 'url("https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600&fit=crop")';
-            break;
-        case 'mountain-night':
-            bgImage = 'url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop")';
-            break;
-        case 'ocean-dark':
-            bgImage = 'url("https://images.unsplash.com/photo-1514894743437-4c2a81c6c041?w=800&h=600&fit=crop")';
-            break;
-        case 'space-dark':
-            bgImage = 'url("https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=800&h=600&fit=crop")';
-            break;
-    }
+    // Add active class to clicked option
+    event.target.closest('.icon-color-option').classList.add('active');
     
-    const styles = `
-        .col-lg-2.layout-side-section {
-            background-image: ${bgImage} !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            position: relative !important;
-            width: 100% !important;
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        .col-lg-2.layout-side-section::after {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background-color: rgba(0, 0, 0, 0.1) !important;
-            z-index: 1 !important;
-        }
-        
-        .col-lg-2.layout-side-section::before {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background-color: rgba(0, 0, 0, 0.6) !important;
-            z-index: 1 !important;
-        }
-        
-        .desk-sidebar, .sidebar-menu, .list-sidebar {
-            background-image: ${bgImage} !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            position: relative !important;
-            width: 100% !important;
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu {
-            background-image: ${bgImage} !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            position: relative !important;
-            width: 100% !important;
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        .desk-sidebar::before, .sidebar-menu::before, .list-sidebar::before {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background-color: rgba(0, 0, 0, 0.6) !important;
-            z-index: 1 !important;
-        }
-        
-        .sidebar::before, .nav-sidebar::before, .sidebar-nav::before, .sidebar-menu::before {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background-color: rgba(0, 0, 0, 0.6) !important;
-            z-index: 1 !important;
-        }
-        
-        .desk-sidebar > *, .sidebar-menu > *, .list-sidebar > * {
-            position: relative !important;
-            z-index: 2 !important;
-            color: #ffffff !important;
-        }
-        
-        .sidebar > *, .nav-sidebar > *, .sidebar-nav > *, .sidebar-menu > * {
-            position: relative !important;
-            z-index: 2 !important;
-            color: #ffffff !important;
-        }
-        
-        .desk-sidebar *, .sidebar-menu *, .list-sidebar *,
-        .desk-sidebar a, .sidebar-menu a, .list-sidebar a,
-        .desk-sidebar span, .sidebar-menu span, .list-sidebar span,
-        .desk-sidebar div, .sidebar-menu div, .list-sidebar div,
-        .desk-sidebar li, .sidebar-menu li, .list-sidebar li,
-        .desk-sidebar .item-anchor, .sidebar-menu .item-anchor, .list-sidebar .item-anchor,
-        .desk-sidebar .sidebar-item-label, .sidebar-menu .sidebar-item-label, .list-sidebar .sidebar-item-label {
-            color: #ffffff !important;
-        }
-        
-        .sidebar *, .nav-sidebar *, .sidebar-nav *, .sidebar-menu *,
-        .sidebar a, .nav-sidebar a, .sidebar-nav a, .sidebar-menu a,
-        .sidebar span, .nav-sidebar span, .sidebar-nav span, .sidebar-menu span,
-        .sidebar div, .nav-sidebar div, .sidebar-nav div, .sidebar-menu div,
-        .sidebar li, .nav-sidebar li, .sidebar-nav li, .sidebar-menu li,
-        .sidebar .nav-link, .nav-sidebar .nav-link, .sidebar-nav .nav-link, .sidebar-menu .nav-link,
-        .sidebar .nav-item, .nav-sidebar .nav-item, .sidebar-nav .nav-item, .sidebar-menu .nav-item {
-            color: #ffffff !important;
-        }
-        
-        .desk-sidebar-item.selected, .standard-sidebar-item.selected {
-            background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #333333 !important;
-            border-radius: 8px !important;
-            margin: 2px 8px !important;
-        }
-        
-        .desk-sidebar-item.selected .item-anchor, .standard-sidebar-item.selected .item-anchor {
-            color: #333333 !important;
-        }
-        
-        .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label {
-            color: #333333 !important;
-        }
-        
-        .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon {
-            color: #333333 !important;
-        }
-        
-        .sidebar .nav-item.active, .nav-sidebar .nav-item.active, .sidebar-nav .nav-item.active, .sidebar-menu .nav-item.active,
-        .sidebar .nav-link.active, .nav-sidebar .nav-link.active, .sidebar-nav .nav-link.active, .sidebar-menu .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #333333 !important;
-        }
-        .sidebar .nav-item.active .nav-link, .nav-sidebar .nav-item.active .nav-link, .sidebar-nav .nav-item.active .nav-link, .sidebar-menu .nav-item.active .nav-link,
-        .sidebar .nav-item.active .nav-link span, .nav-sidebar .nav-item.active .nav-link span, .sidebar-nav .nav-item.active .nav-link span, .sidebar-menu .nav-item.active .nav-link span {
-            color: #333333 !important;
-        }
-    `;
+    // Save to localStorage
+    localStorage.setItem('sidebarIconColor', color);
     
-    // Remove existing dynamic styles
-    const existingStyle = document.getElementById('dynamic-sidebar-bg-styles');
-    if (existingStyle) {
-        existingStyle.remove();
-    }
-    
-    // Add new styles
-    const styleElement = document.createElement('style');
-    styleElement.id = 'dynamic-sidebar-bg-styles';
-    styleElement.textContent = styles;
-    document.head.appendChild(styleElement);
+    // Apply CSS styles for icon color
+    applySidebarIconColorStyles(color);
 }
+
+// REMOVED: Apply CSS styles for sidebar backgrounds - Background Images section removed
+// REMOVED: Apply CSS styles for sidebar backgrounds - Background Images section removed
+
 
 // Load saved color on page load
 function loadSavedColor() {
@@ -2948,42 +3149,206 @@ function changeSidebarTextColor(color) {
     applySidebarTextColorStyles(color);
 }
 
-// Change sidebar icon color function
-function changeSidebarIconColor(color) {
-    // Remove active class from all icon color options
-    document.querySelectorAll('.icon-color-option').forEach(option => {
+
+
+// Change theme mode function
+function setThemeMode(mode) {
+    // Remove active class from all theme mode options
+    document.querySelectorAll('.theme-mode-option').forEach(option => {
         option.classList.remove('active');
     });
     
     // Add active class to clicked option
-    event.target.closest('.icon-color-option').classList.add('active');
+    event.target.closest('.theme-mode-option').classList.add('active');
     
     // Save to localStorage
-    localStorage.setItem('sidebarIconColor', color);
+    localStorage.setItem('themeMode', mode);
     
-    // Apply CSS styles for icon color
-    applySidebarIconColorStyles(color);
+    // Apply theme mode
+    applyThemeMode(mode);
 }
 
-// Change sidebar font function
-function changeSidebarFont(font) {
-    // Remove active class from all font options
-    document.querySelectorAll('.font-option').forEach(option => {
+// Apply theme mode styles
+function applyThemeMode(mode) {
+    const body = document.body;
+    const root = document.documentElement;
+    
+    // Remove existing theme classes
+    body.classList.remove('theme-light', 'theme-dark', 'theme-system');
+    root.classList.remove('theme-light', 'theme-dark', 'theme-system');
+    
+    // Connect with ERPNext's theme system
+    if (mode === 'light') {
+        body.classList.add('theme-light');
+        root.classList.add('theme-light');
+        // Set ERPNext theme mode
+        root.setAttribute('data-theme-mode', 'light');
+        document.documentElement.setAttribute("data-theme-mode", "light");
+        console.log('🌞 Light mode applied');
+    } else if (mode === 'dark') {
+        body.classList.add('theme-dark');
+        root.classList.add('theme-dark');
+        // Set ERPNext theme mode
+        root.setAttribute('data-theme-mode', 'dark');
+        document.documentElement.setAttribute("data-theme-mode", "dark");
+        console.log('🌙 Dark mode applied');
+    } else if (mode === 'system') {
+        body.classList.add('theme-system');
+        root.classList.add('theme-system');
+        // Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('theme-dark');
+            root.classList.add('theme-dark');
+            root.setAttribute('data-theme-mode', 'dark');
+            document.documentElement.setAttribute("data-theme-mode", "dark");
+            console.log('💻 System mode: Dark (system preference)');
+        } else {
+            body.classList.add('theme-light');
+            root.classList.add('theme-light');
+            root.setAttribute('data-theme-mode', 'light');
+            document.documentElement.setAttribute("data-theme-mode", "light");
+            console.log('💻 System mode: Light (system preference)');
+        }
+    }
+    
+    // Trigger ERPNext theme change event
+    if (window.frappe && window.frappe.ui && window.frappe.ui.theme_switcher) {
+        // Update ERPNext's theme switcher if it exists
+        const themeSwitcher = window.frappe.ui.theme_switcher;
+        if (themeSwitcher && themeSwitcher.current_theme !== mode) {
+            themeSwitcher.current_theme = mode;
+        }
+    }
+    
+    // Show success message
+    if (window.frappe && window.frappe.show_alert) {
+        frappe.show_alert(__("Theme Changed"), 3);
+    }
+}
+
+// Load saved theme mode on page load
+function loadSavedThemeMode() {
+    const savedMode = localStorage.getItem('themeMode') || 'light';
+    applyThemeMode(savedMode);
+    
+    // Mark the corresponding option as active
+    const activeOption = document.querySelector(`[data-mode="${savedMode}"]`);
+    if (activeOption) {
+        document.querySelectorAll('.theme-mode-option').forEach(option => {
         option.classList.remove('active');
     });
-    
-    // Add active class to clicked option
-    event.target.closest('.font-option').classList.add('active');
-    
-    // Save to localStorage
-    localStorage.setItem('sidebarFont', font);
-    
-    // Apply CSS styles for font
-    applySidebarFontStyles(font);
+        activeOption.classList.add('active');
+    }
 }
+
+// Listen for system theme changes
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        const currentMode = localStorage.getItem('themeMode');
+        if (currentMode === 'system') {
+            applyThemeMode('system');
+        }
+    });
+}
+
+// Sync with ERPNext's theme switcher
+function syncWithERPNextTheme() {
+    // Listen for ERPNext theme changes
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme-mode') {
+                const erpnextTheme = document.documentElement.getAttribute('data-theme-mode');
+                const ourTheme = localStorage.getItem('themeMode');
+                
+                // If ERPNext theme changed and it's different from ours, update ours
+                if (erpnextTheme && erpnextTheme !== ourTheme) {
+                    console.log('🔄 ERPNext theme changed to:', erpnextTheme);
+                    
+                    // Map ERPNext themes to our themes
+                    let mappedTheme = 'light';
+                    if (erpnextTheme === 'dark') {
+                        mappedTheme = 'dark';
+                    } else if (erpnextTheme === 'auto' || erpnextTheme === 'system') {
+                        mappedTheme = 'system';
+                    }
+                    
+                    // Update our theme mode
+                    localStorage.setItem('themeMode', mappedTheme);
+                    
+                    // Update our UI
+                    document.querySelectorAll('.theme-mode-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    const activeOption = document.querySelector(`[data-mode="${mappedTheme}"]`);
+                    if (activeOption) {
+                        activeOption.classList.add('active');
+                    }
+                }
+            }
+        });
+    });
+    
+    // Start observing
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme-mode']
+    });
+}
+
+// Initialize sync when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(syncWithERPNextTheme, 1000);
+});
+
+// Integrate with ERPNext's theme customizer
+function integrateWithERPNextCustomizer() {
+    // Override ERPNext's theme customizer if it exists
+    if (window.erpnext && window.erpnext.theme_customizer) {
+        const originalApplyTheme = window.erpnext.theme_customizer.apply_theme;
+        
+        window.erpnext.theme_customizer.apply_theme = function(values) {
+            // Call original function
+            if (originalApplyTheme) {
+                originalApplyTheme.call(this, values);
+            }
+            
+            // Sync with our customizer
+            if (values.theme_mode) {
+                let mappedMode = 'light';
+                if (values.theme_mode === 'Dark') {
+                    mappedMode = 'dark';
+                } else if (values.theme_mode === 'System') {
+                    mappedMode = 'system';
+                }
+                
+                // Update our theme mode
+                localStorage.setItem('themeMode', mappedMode);
+                applyThemeMode(mappedMode);
+                
+                // Update our UI
+                document.querySelectorAll('.theme-mode-option').forEach(option => {
+                    option.classList.remove('active');
+                });
+                const activeOption = document.querySelector(`[data-mode="${mappedMode}"]`);
+                if (activeOption) {
+                    activeOption.classList.add('active');
+                }
+            }
+        };
+        
+        console.log('✅ Integrated with ERPNext theme customizer');
+    }
+}
+
+// Initialize integration
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(integrateWithERPNextCustomizer, 2000);
+});
+
+// REMOVED: Change sidebar font function - Font Family section removed
 
 // REMOVED: Change sidebar layout function - Layout Style section removed
-/*
+
 function changeSidebarLayout(layout) {
     // Force default layout regardless of what user clicks
     const defaultLayout = 'default';
@@ -3008,7 +3373,6 @@ function changeSidebarLayout(layout) {
     // Show message that layout is locked to default
     console.log('Sidebar layout is locked to Default');
 }
-*/
 
 // Apply CSS styles for sidebar styles
 function applySidebarStyleStyles(style) {
@@ -3231,69 +3595,7 @@ function applySidebarIconColorStyles(color) {
     document.head.appendChild(styleElement);
 }
 
-// Apply CSS styles for sidebar fonts
-function applySidebarFontStyles(font) {
-    let fontFamily = '';
-    
-    switch(font) {
-        case 'default':
-            fontFamily = 'inherit';
-            break;
-        case 'roboto':
-            fontFamily = "'Roboto', sans-serif";
-            break;
-        case 'opensans':
-            fontFamily = "'Open Sans', sans-serif";
-            break;
-        case 'lato':
-            fontFamily = "'Lato', sans-serif";
-            break;
-        case 'montserrat':
-            fontFamily = "'Montserrat', sans-serif";
-            break;
-        case 'poppins':
-            fontFamily = "'Poppins', sans-serif";
-            break;
-    }
-    
-    const styles = `
-        .col-lg-2.layout-side-section *,
-        .col-lg-2.layout-side-section a,
-        .col-lg-2.layout-side-section span,
-        .col-lg-2.layout-side-section div,
-        .col-lg-2.layout-side-section li,
-        .col-lg-2.layout-side-section .item-anchor,
-        .col-lg-2.layout-side-section .sidebar-item-label,
-        .desk-sidebar *,
-        .desk-sidebar a,
-        .desk-sidebar span,
-        .desk-sidebar div,
-        .desk-sidebar li,
-        .desk-sidebar .item-anchor,
-        .desk-sidebar .sidebar-item-label,
-        .sidebar-menu *,
-        .sidebar-menu a,
-        .sidebar-menu span,
-        .sidebar-menu div,
-        .sidebar-menu li,
-        .sidebar-menu .item-anchor,
-        .sidebar-menu .sidebar-item-label {
-            font-family: ${fontFamily} !important;
-        }
-    `;
-    
-    // Remove existing dynamic styles
-    const existingStyle = document.getElementById('dynamic-sidebar-font-styles');
-    if (existingStyle) {
-        existingStyle.remove();
-    }
-    
-    // Add new styles
-    const styleElement = document.createElement('style');
-    styleElement.id = 'dynamic-sidebar-font-styles';
-    styleElement.textContent = styles;
-    document.head.appendChild(styleElement);
-}
+// REMOVED: Apply CSS styles for sidebar fonts - Font Family section removed
 
 // Apply CSS styles for sidebar layouts
 function applySidebarLayoutStyles(layout) {
@@ -3482,6 +3784,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         loadSavedColor();
         loadSavedSidebarSettings();
+        loadSavedThemeMode();
         
         // Force default sidebar layout on page load
         const defaultLayout = 'default';
@@ -3858,4 +4161,495 @@ function createFullscreenButton() {
     });
     
     console.log('Fullscreen button created next to search bar');
+}
+
+// Update notification icon color based on navbar background
+function updateNotificationIconColor(notificationIcon) {
+    try {
+        // Get navbar background color
+        const navbar = document.querySelector('.navbar, .main-header, .header');
+        if (navbar) {
+            const computedStyle = window.getComputedStyle(navbar);
+            const backgroundColor = computedStyle.backgroundColor;
+            
+            console.log('🔍 Navbar background color:', backgroundColor);
+            
+            // Convert RGB to brightness
+            const rgb = backgroundColor.match(/\d+/g);
+            let iconColor = '#333'; // Default dark color
+            
+            if (rgb && rgb.length >= 3) {
+                const r = parseInt(rgb[0]);
+                const g = parseInt(rgb[1]);
+                const b = parseInt(rgb[2]);
+                
+                // Calculate brightness (0-255)
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                
+                // Set icon color based on background brightness
+                iconColor = brightness > 128 ? '#333' : 'white';
+                
+                console.log(`🔔 Calculated brightness: ${brightness}, setting color to: ${iconColor}`);
+            } else {
+                // If RGB parsing fails, try to detect by color name
+                if (backgroundColor.includes('black') || backgroundColor.includes('rgb(0, 0, 0)') || backgroundColor.includes('#000')) {
+                    iconColor = 'white';
+                    console.log('🔔 Detected black background, setting to white');
+                } else {
+                    iconColor = '#333';
+                    console.log('🔔 Detected light background, setting to dark');
+                }
+            }
+            
+            // Apply color using CSS classes
+            if (notificationIcon) {
+                // Remove existing color classes
+                notificationIcon.classList.remove('dark-icon', 'white-icon');
+                
+                // Add appropriate color class
+                if (iconColor === 'white') {
+                    notificationIcon.classList.add('white-icon');
+                    console.log('✅ Added white-icon class');
+                } else {
+                    notificationIcon.classList.add('dark-icon');
+                    console.log('✅ Added dark-icon class');
+                }
+            }
+            
+            console.log(`🔔 Notification icon color set to: ${iconColor}`);
+        } else {
+            console.log('❌ Navbar not found, using default dark color');
+            if (notificationIcon) {
+                notificationIcon.classList.remove('white-icon');
+                notificationIcon.classList.add('dark-icon');
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to update notification icon color:', e);
+        // Fallback to dark color
+        if (notificationIcon) {
+            notificationIcon.classList.remove('white-icon');
+            notificationIcon.classList.add('dark-icon');
+        }
+    }
+}
+
+// COMPREHENSIVE COLOR FIX FUNCTION
+function applyCompleteSidebarColor(color, backgroundColor, textColor = '#ffffff', iconColor = '#ffffff') {
+    const styles = `
+        .col-lg-2.layout-side-section { 
+            background-color: ${backgroundColor} !important; 
+            color: ${textColor} !important; 
+            position: relative !important;
+            width: 100% !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .col-lg-2.layout-side-section * {
+            color: ${textColor} !important;
+        }
+        .desk-sidebar, .sidebar-menu, .list-sidebar { 
+            background-color: ${backgroundColor} !important; 
+            color: ${textColor} !important; 
+            position: relative !important;
+            width: 100% !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .desk-sidebar *, .sidebar-menu *, .list-sidebar *,
+        .desk-sidebar a, .sidebar-menu a, .list-sidebar a,
+        .desk-sidebar span, .sidebar-menu span, .list-sidebar span,
+        .desk-sidebar div, .sidebar-menu div, .list-sidebar div,
+        .desk-sidebar li, .sidebar-menu li, .list-sidebar li,
+        .desk-sidebar .item-anchor, .sidebar-menu .item-anchor, .list-sidebar .item-anchor,
+        .desk-sidebar .sidebar-item-label, .sidebar-menu .sidebar-item-label, .list-sidebar .sidebar-item-label {
+            color: ${textColor} !important;
+        }
+        .desk-sidebar-item.selected, .standard-sidebar-item.selected {
+            background-color: ${textColor === '#ffffff' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'} !important;
+            color: ${textColor} !important;
+            border-radius: 8px !important;
+            margin: 2px 8px !important;
+        }
+        .desk-sidebar-item.selected .item-anchor, .standard-sidebar-item.selected .item-anchor {
+            color: ${textColor} !important;
+        }
+        .desk-sidebar-item.selected .sidebar-item-label, .standard-sidebar-item.selected .sidebar-item-label {
+            color: ${textColor} !important;
+        }
+        .desk-sidebar-item.selected .sidebar-item-icon, .standard-sidebar-item.selected .sidebar-item-icon {
+            color: ${iconColor} !important;
+        }
+        
+        /* Apply icon color to all sidebar icons - MAXIMUM SPECIFICITY */
+        .col-lg-2.layout-side-section i,
+        .col-lg-2.layout-side-section .fa,
+        .col-lg-2.layout-side-section .icon,
+        .col-lg-2.layout-side-section .sidebar-item-icon,
+        .col-lg-2.layout-side-section [class*="icon"],
+        .col-lg-2.layout-side-section [class*="fa-"],
+        .col-lg-2.layout-side-section [class*="feather"],
+        .col-lg-2.layout-side-section *[class*="icon"],
+        .col-lg-2.layout-side-section *[class*="fa"],
+        .col-lg-2.layout-side-section *[class*="feather"],
+        .desk-sidebar i,
+        .desk-sidebar .fa,
+        .desk-sidebar .icon,
+        .desk-sidebar .sidebar-item-icon,
+        .desk-sidebar [class*="icon"],
+        .desk-sidebar [class*="fa-"],
+        .desk-sidebar [class*="feather"],
+        .desk-sidebar *[class*="icon"],
+        .desk-sidebar *[class*="fa"],
+        .desk-sidebar *[class*="feather"],
+        .sidebar-menu i,
+        .sidebar-menu .fa,
+        .sidebar-menu .icon,
+        .sidebar-menu .sidebar-item-icon,
+        .sidebar-menu [class*="icon"],
+        .sidebar-menu [class*="fa-"],
+        .sidebar-menu [class*="feather"],
+        .sidebar-menu *[class*="icon"],
+        .sidebar-menu *[class*="fa"],
+        .sidebar-menu *[class*="feather"],
+        .list-sidebar i,
+        .list-sidebar .fa,
+        .list-sidebar .icon,
+        .list-sidebar .sidebar-item-icon,
+        .list-sidebar [class*="icon"],
+        .list-sidebar [class*="fa-"],
+        .list-sidebar [class*="feather"],
+        .list-sidebar *[class*="icon"],
+        .list-sidebar *[class*="fa"],
+        .list-sidebar *[class*="feather"],
+        .sidebar i,
+        .nav-sidebar i,
+        .sidebar-nav i,
+        .sidebar .fa,
+        .nav-sidebar .fa,
+        .sidebar-nav .fa,
+        .sidebar .icon,
+        .nav-sidebar .icon,
+        .sidebar-nav .icon,
+        .sidebar .sidebar-item-icon,
+        .nav-sidebar .sidebar-item-icon,
+        .sidebar-nav .sidebar-item-icon,
+        .desk-sidebar-item i,
+        .standard-sidebar-item i,
+        .desk-sidebar-item .fa,
+        .standard-sidebar-item .fa,
+        .desk-sidebar-item .icon,
+        .standard-sidebar-item .icon,
+        .desk-sidebar-item .sidebar-item-icon,
+        .standard-sidebar-item .sidebar-item-icon,
+        .desk-sidebar .item-anchor i,
+        .sidebar-menu .item-anchor i,
+        .list-sidebar .item-anchor i,
+        .desk-sidebar .item-anchor .fa,
+        .sidebar-menu .item-anchor .fa,
+        .list-sidebar .item-anchor .fa,
+        .desk-sidebar .item-anchor .icon,
+        .sidebar-menu .item-anchor .icon,
+        .list-sidebar .item-anchor .icon,
+        .desk-sidebar .item-anchor .sidebar-item-icon,
+        .sidebar-menu .item-anchor .sidebar-item-icon,
+        .list-sidebar .item-anchor .sidebar-item-icon,
+        /* MAXIMUM SPECIFICITY OVERRIDE */
+        .col-lg-2.layout-side-section .desk-sidebar-item i,
+        .col-lg-2.layout-side-section .standard-sidebar-item i,
+        .col-lg-2.layout-side-section .desk-sidebar-item .fa,
+        .col-lg-2.layout-side-section .standard-sidebar-item .fa,
+        .col-lg-2.layout-side-section .desk-sidebar-item .icon,
+        .col-lg-2.layout-side-section .standard-sidebar-item .icon,
+        .col-lg-2.layout-side-section .desk-sidebar-item .sidebar-item-icon,
+        .col-lg-2.layout-side-section .standard-sidebar-item .sidebar-item-icon,
+        .col-lg-2.layout-side-section .desk-sidebar-item .item-anchor i,
+        .col-lg-2.layout-side-section .standard-sidebar-item .item-anchor i,
+        .col-lg-2.layout-side-section .desk-sidebar-item .item-anchor .fa,
+        .col-lg-2.layout-side-section .standard-sidebar-item .item-anchor .fa,
+        .col-lg-2.layout-side-section .desk-sidebar-item .item-anchor .icon,
+        .col-lg-2.layout-side-section .standard-sidebar-item .item-anchor .icon,
+        .col-lg-2.layout-side-section .desk-sidebar-item .item-anchor .sidebar-item-icon,
+        .col-lg-2.layout-side-section .standard-sidebar-item .item-anchor .sidebar-item-icon {
+            color: ${iconColor} !important;
+        }
+        .sidebar, .nav-sidebar, .sidebar-nav, .sidebar-menu { 
+            background-color: ${backgroundColor} !important; 
+            color: ${textColor} !important; 
+            position: relative !important;
+            width: 100% !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .sidebar *, .nav-sidebar *, .sidebar-nav *, .sidebar-menu *,
+        .sidebar a, .nav-sidebar a, .sidebar-nav a, .sidebar-menu a,
+        .sidebar span, .nav-sidebar span, .sidebar-nav span, .sidebar-menu span,
+        .sidebar div, .nav-sidebar div, .sidebar-nav div, .sidebar-menu div,
+        .sidebar li, .nav-sidebar li, .sidebar-nav li, .sidebar-menu li,
+        .sidebar .nav-link, .nav-sidebar .nav-link, .sidebar-nav .nav-link, .sidebar-menu .nav-link,
+        .sidebar .nav-item, .nav-sidebar .nav-item, .sidebar-nav .nav-item, .sidebar-menu .nav-item {
+            color: ${textColor} !important;
+        }
+        .sidebar .active, .nav-sidebar .active, .sidebar-nav .active, .sidebar-menu .active,
+        .sidebar .nav-item.active, .nav-sidebar .nav-item.active, .sidebar-nav .nav-item.active, .sidebar-menu .nav-item.active {
+            background-color: ${textColor === '#ffffff' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'} !important;
+            color: ${textColor} !important;
+        }
+    `;
+    
+    // Remove existing dynamic styles
+    const existingStyle = document.getElementById('dynamic-sidebar-styles');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    // Add new styles
+    const styleElement = document.createElement('style');
+    styleElement.id = 'dynamic-sidebar-styles';
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+    
+    console.log(`✅ Applied complete color: ${color} with background: ${backgroundColor}, text: ${textColor}, icon: ${iconColor}`);
+    
+    // DIRECT DOM MANIPULATION - GUARANTEED TO WORK
+    function forceIconColor() {
+        console.log(`🔍 Looking for sidebar with icon color: ${iconColor}`);
+        
+        // Find sidebar container - try multiple selectors
+        const sidebar = document.querySelector('.col-lg-2.layout-side-section') || 
+                       document.querySelector('.desk-sidebar') || 
+                       document.querySelector('.sidebar-menu') || 
+                       document.querySelector('.list-sidebar') ||
+                       document.querySelector('.sidebar') ||
+                       document.querySelector('.nav-sidebar') ||
+                       document.querySelector('.sidebar-nav');
+        
+        if (!sidebar) {
+            console.log('❌ Sidebar not found with any selector');
+            console.log('Available elements:', document.querySelectorAll('[class*="sidebar"]'));
+            return;
+        }
+        
+        console.log(`✅ Sidebar found:`, sidebar.className);
+        
+        // Find ALL elements inside sidebar
+        const allElements = sidebar.querySelectorAll('*');
+        console.log(`🔍 Found ${allElements.length} total elements in sidebar`);
+        
+        let iconCount = 0;
+        
+        allElements.forEach((element, index) => {
+            const tagName = element.tagName.toLowerCase();
+            const className = element.className || '';
+            const id = element.id || '';
+            
+            // Check if it's an icon element - more comprehensive
+            const isIcon = tagName === 'i' || 
+                          tagName === 'svg' ||
+                          tagName === 'use' ||
+                          (typeof className === 'string' && className.includes('fa')) || 
+                          (typeof className === 'string' && className.includes('icon')) || 
+                          (typeof className === 'string' && className.includes('feather')) ||
+                          (typeof className === 'string' && className.includes('sidebar-item-icon')) ||
+                          element.classList.contains('sidebar-item-icon') ||
+                          (typeof id === 'string' && id.includes('icon')) ||
+                          element.getAttribute('data-icon') ||
+                          element.getAttribute('data-feather') ||
+                          element.getAttribute('href');
+            
+            if (isIcon) {
+                const oldColor = element.style.color || getComputedStyle(element).color;
+                
+                // Force set color with multiple methods - MAXIMUM OVERRIDE
+                element.style.setProperty('color', iconColor, 'important');
+                element.style.color = iconColor + ' !important';
+                element.setAttribute('style', (element.getAttribute('style') || '') + `; color: ${iconColor} !important;`);
+                
+                // Also set CSS custom property
+                element.style.setProperty('--icon-color', iconColor, 'important');
+                
+                // Force remove any conflicting styles
+                element.style.removeProperty('color');
+                element.style.setProperty('color', iconColor, 'important');
+                
+                iconCount++;
+                console.log(`🎯 Icon ${iconCount}: ${tagName}.${className} (${oldColor} → ${iconColor})`);
+            }
+        });
+        
+        console.log(`✅ Force updated ${iconCount} icons with color: ${iconColor}`);
+        
+        // Also try to find icons by looking for common patterns
+        const iconPatterns = [
+            'i[class*="fa"]',
+            'i[class*="icon"]',
+            'i[class*="feather"]',
+            '[class*="sidebar-item-icon"]',
+            'svg',
+            '[data-icon]',
+            '[data-feather]'
+        ];
+        
+        iconPatterns.forEach(pattern => {
+            const patternIcons = sidebar.querySelectorAll(pattern);
+            patternIcons.forEach(icon => {
+                icon.style.setProperty('color', iconColor, 'important');
+                icon.style.color = iconColor + ' !important';
+                console.log(`🎯 Pattern icon: ${pattern} → ${iconColor}`);
+            });
+        });
+    }
+    
+    // Run immediately
+    forceIconColor();
+    
+    // Run multiple times to catch all icons
+    setTimeout(forceIconColor, 100);
+    setTimeout(forceIconColor, 300);
+    setTimeout(forceIconColor, 600);
+    setTimeout(forceIconColor, 1000);
+    
+    // ULTIMATE FORCE - Try every possible approach
+    setTimeout(() => {
+        console.log('🚀 ULTIMATE FORCE - Trying all approaches...');
+        
+        // Method 1: Direct style injection
+        const style = document.createElement('style');
+        style.textContent = `
+            .col-lg-2.layout-side-section i,
+            .col-lg-2.layout-side-section .fa,
+            .col-lg-2.layout-side-section .icon,
+            .col-lg-2.layout-side-section .sidebar-item-icon,
+            .col-lg-2.layout-side-section svg,
+            .col-lg-2.layout-side-section use,
+            .col-lg-2.layout-side-section [class*="icon"],
+            .col-lg-2.layout-side-section [class*="fa-"],
+            .col-lg-2.layout-side-section [class*="feather"],
+            .desk-sidebar i,
+            .desk-sidebar .fa,
+            .desk-sidebar .icon,
+            .desk-sidebar .sidebar-item-icon,
+            .desk-sidebar svg,
+            .desk-sidebar use,
+            .desk-sidebar [class*="icon"],
+            .desk-sidebar [class*="fa-"],
+            .desk-sidebar [class*="feather"],
+            .sidebar-menu i,
+            .sidebar-menu .fa,
+            .sidebar-menu .icon,
+            .sidebar-menu .sidebar-item-icon,
+            .sidebar-menu svg,
+            .sidebar-menu use,
+            .sidebar-menu [class*="icon"],
+            .sidebar-menu [class*="fa-"],
+            .sidebar-menu [class*="feather"],
+            .list-sidebar i,
+            .list-sidebar .fa,
+            .list-sidebar .icon,
+            .list-sidebar .sidebar-item-icon,
+            .list-sidebar svg,
+            .list-sidebar use,
+            .list-sidebar [class*="icon"],
+            .list-sidebar [class*="fa-"],
+            .list-sidebar [class*="feather"] {
+                color: ${iconColor} !important;
+                fill: ${iconColor} !important;
+            }
+        `;
+        document.head.appendChild(style);
+        console.log('✅ Injected ultimate CSS with color:', iconColor);
+        
+        // Method 2: Query all icons and force set
+        const allIcons = document.querySelectorAll('i, .fa, .icon, [class*="icon"], [class*="fa-"], [class*="feather"], svg, use');
+        console.log('🔍 Found', allIcons.length, 'total icons on page');
+        
+        let sidebarIconCount = 0;
+        allIcons.forEach(icon => {
+            if (icon.closest('.col-lg-2.layout-side-section') || 
+                icon.closest('.desk-sidebar') || 
+                icon.closest('.sidebar-menu') || 
+                icon.closest('.list-sidebar')) {
+                
+                icon.style.setProperty('color', iconColor, 'important');
+                icon.style.setProperty('fill', iconColor, 'important');
+                icon.style.color = iconColor + ' !important';
+                icon.style.fill = iconColor + ' !important';
+                
+                sidebarIconCount++;
+                console.log('🎯 Ultimate force icon', sidebarIconCount, ':', icon.tagName, icon.className, '→', iconColor);
+            }
+        });
+        
+        console.log('✅ Ultimate force updated', sidebarIconCount, 'sidebar icons');
+    }, 1500);
+}
+
+// Override the existing applySidebarStyles function
+function applySidebarStyles(color) {
+    const colorMap = {
+        'sidebar-white': { bg: '#ffffff', text: '#333333', icon: '#333333' },
+        'sidebar-lightgreen': { bg: '#28a745', text: '#ffffff', icon: '#ffffff' },
+        'sidebar-darkgray': { bg: '#343a40', text: '#ffffff', icon: '#ffffff' },
+        'sidebar-black': { bg: '#000000', text: '#ffffff', icon: '#ffffff' },
+        'sidebar-blue': { bg: '#007bff', text: '#ffffff', icon: '#ffffff' },
+        'sidebar-purple': { bg: '#9C27B0', text: '#ffffff', icon: '#ffffff' },
+        'sidebar-teal': { bg: '#20c997', text: '#ffffff', icon: '#ffffff' }
+    };
+    
+    const colorConfig = colorMap[color];
+    if (colorConfig) {
+        applyCompleteSidebarColor(color, colorConfig.bg, colorConfig.text, colorConfig.icon);
+    }
+}
+
+// APPLY DEFAULT SIDEBAR LAYOUT
+function applyDefaultSidebarLayout() {
+    const styles = `
+        .col-lg-2.layout-side-section {
+            width: 16.666667% !important;
+            max-width: 250px !important;
+            min-width: 200px !important;
+        }
+        .desk-sidebar, .sidebar-menu, .list-sidebar {
+            padding: 0 !important;
+        }
+        .desk-sidebar-item, .standard-sidebar-item {
+            margin: 0 !important;
+            padding: 12px 16px !important;
+            border-radius: 0 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        .desk-sidebar-item:last-child, .standard-sidebar-item:last-child {
+            border-bottom: none !important;
+        }
+        .desk-sidebar-item.selected, .standard-sidebar-item.selected {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            border-left: 3px solid rgba(255, 255, 255, 0.8) !important;
+        }
+        .sidebar-item-label {
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+        .sidebar-item-icon {
+            font-size: 16px !important;
+            margin-right: 12px !important;
+        }
+    `;
+    
+    // Remove existing layout styles
+    const existingStyle = document.getElementById('default-sidebar-layout');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    // Add new styles
+    const styleElement = document.createElement('style');
+    styleElement.id = 'default-sidebar-layout';
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+    
+    console.log('✅ Default sidebar layout applied successfully');
 }
