@@ -1,4 +1,23 @@
 // Floating Gear Button JavaScript
+console.log('🚀 DreamTheme JavaScript starting...');
+
+// IMMEDIATE EXECUTION - Don't wait for DOMContentLoaded
+console.log('🔧 IMMEDIATE - Creating gear button...');
+try {
+    createFloatingGearButton();
+    console.log('✅ IMMEDIATE - Gear button creation completed');
+} catch (e) {
+    console.error('❌ IMMEDIATE - Gear button creation failed:', e);
+}
+
+console.log('📺 IMMEDIATE - Creating fullscreen button...');
+try {
+    createFullscreenButton();
+    console.log('✅ IMMEDIATE - Fullscreen button creation completed');
+} catch (e) {
+    console.error('❌ IMMEDIATE - Fullscreen button creation failed:', e);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 DreamTheme JavaScript loaded');
     console.log('📍 Current URL:', window.location.href);
@@ -35,6 +54,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load saved theme color
     loadSavedThemeColor();
+    
+    // Load saved top bar color
+    loadSavedTopBarColor();
+    
+    // Load saved sidebar color
+    loadSavedSidebarColor();
     
     // Apply with delays to ensure elements are loaded
     setTimeout(restoreDefaultPageHeader, 500);
@@ -123,6 +148,22 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) {
         console.error('❌ Fullscreen button creation failed:', e);
     }
+    
+    // FORCE CREATE FULLSCREEN BUTTON MULTIPLE TIMES
+    setTimeout(() => {
+        console.log('📺 FORCE Creating fullscreen button (500ms)...');
+        createFullscreenButton();
+    }, 500);
+    
+    setTimeout(() => {
+        console.log('📺 FORCE Creating fullscreen button (1000ms)...');
+        createFullscreenButton();
+    }, 1000);
+    
+    setTimeout(() => {
+        console.log('📺 FORCE Creating fullscreen button (2000ms)...');
+        createFullscreenButton();
+    }, 2000);
     
 
     // Show ERPNext default notification icon
@@ -803,6 +844,34 @@ function loadSavedThemeColor() {
     if (savedTheme) {
         console.log('📁 Loading saved theme color:', savedTheme);
         setThemeColor(savedTheme);
+    } else {
+        // Set default theme color to black
+        console.log('📁 Setting default theme color: black');
+        setThemeColor('black');
+    }
+}
+
+function loadSavedTopBarColor() {
+    const savedTopBarColor = localStorage.getItem('topBarColor');
+    if (savedTopBarColor) {
+        console.log('📁 Loading saved top bar color:', savedTopBarColor);
+        setTopBarColor(savedTopBarColor);
+    } else {
+        // Set default top bar color to white
+        console.log('📁 Setting default top bar color: white');
+        setTopBarColor('white');
+    }
+}
+
+function loadSavedSidebarColor() {
+    const savedSidebarColor = localStorage.getItem('sidebarColor');
+    if (savedSidebarColor) {
+        console.log('📁 Loading saved sidebar color:', savedSidebarColor);
+        setSidebarColor(savedSidebarColor);
+    } else {
+        // Set default sidebar color to white
+        console.log('📁 Setting default sidebar color: white');
+        setSidebarColor('sidebar-white');
     }
 }
 
@@ -828,12 +897,13 @@ function createFloatingGearButton() {
     gearButton.innerHTML = '<i class="gear-icon">⚙</i>';
     gearButton.title = 'Settings';
     gearButton.style.position = 'fixed';
-    gearButton.style.top = '20px';
+    gearButton.style.top = '80px';
     gearButton.style.right = '20px';
-    gearButton.style.zIndex = '99999';
+    gearButton.style.zIndex = '999999';
     gearButton.style.display = 'flex';
     gearButton.style.visibility = 'visible';
     gearButton.style.opacity = '1';
+    gearButton.style.pointerEvents = 'auto';
     
     // Create settings panel
     const settingsPanel = document.createElement('div');
@@ -843,20 +913,20 @@ function createFloatingGearButton() {
             <div class="header-content">
                 <div class="header-icon">🎨</div>
                 <div class="header-text">
-                    <h5>Theme Customizer</h5>
+            <h5>Theme Customizer</h5>
                     <p>Customize your ERPNext experience</p>
                 </div>
             </div>
-            <button class="close-btn" onclick="toggleSettingsPanel()">×</button>
+            <button class="close-btn" onclick="closeSettingsPanel()">×</button>
         </div>
         <div class="settings-panel-body">
             <div class="theme-section">
                 <div class="section-header">
                     <h6>🎨 Theme Colors</h6>
                     <p>Choose your preferred color scheme</p>
-                </div>
+                    </div>
                 <div class="theme-colors-grid">
-                    <div class="theme-color-option active" data-theme="teal" onclick="setThemeColor('teal')">
+                    <div class="theme-color-option" data-theme="teal" onclick="setThemeColor('teal')">
                         <div class="theme-color-swatch teal"></div>
                         <span>Teal</span>
                     </div>
@@ -867,11 +937,11 @@ function createFloatingGearButton() {
                     <div class="theme-color-option" data-theme="purple" onclick="setThemeColor('purple')">
                         <div class="theme-color-swatch purple"></div>
                         <span>Purple</span>
-                    </div>
+                </div>
                     <div class="theme-color-option" data-theme="blue" onclick="setThemeColor('blue')">
                         <div class="theme-color-swatch blue"></div>
                         <span>Blue</span>
-                    </div>
+            </div>
                     <div class="theme-color-option" data-theme="green" onclick="setThemeColor('green')">
                         <div class="theme-color-swatch green"></div>
                         <span>Green</span>
@@ -879,8 +949,8 @@ function createFloatingGearButton() {
                     <div class="theme-color-option" data-theme="orange-red" onclick="setThemeColor('orange-red')">
                         <div class="theme-color-swatch orange-red"></div>
                         <span>Orange Red</span>
-                    </div>
-                    <div class="theme-color-option" data-theme="black" onclick="setThemeColor('black')">
+                </div>
+                    <div class="theme-color-option active" data-theme="black" onclick="setThemeColor('black')">
                         <div class="theme-color-swatch black"></div>
                         <span>Black</span>
                     </div>
@@ -893,8 +963,8 @@ function createFloatingGearButton() {
                     <p>Customize the top navigation bar</p>
                 </div>
                 <div class="color-swatches-grid">
-                    <div class="color-swatch white" data-color="white" onclick="setTopBarColor('white')" title="White"></div>
-                    <div class="color-swatch light-green active" data-color="lightgreen" onclick="setTopBarColor('lightgreen')" title="Light Green"></div>
+                    <div class="color-swatch white active" data-color="white" onclick="setTopBarColor('white')" title="White"></div>
+                    <div class="color-swatch light-green" data-color="lightgreen" onclick="setTopBarColor('lightgreen')" title="Light Green"></div>
                     <div class="color-swatch dark-gray" data-color="darkgray" onclick="setTopBarColor('darkgray')" title="Dark Gray"></div>
                     <div class="color-swatch black" data-color="black" onclick="setTopBarColor('black')" title="Black"></div>
                     <div class="color-swatch blue" data-color="blue" onclick="setTopBarColor('blue')" title="Blue"></div>
@@ -917,8 +987,8 @@ function createFloatingGearButton() {
                 <div class="color-section">
                     <label>Solid Colors</label>
                     <div class="color-swatches solid-colors">
-                        <div class="color-swatch white" data-color="sidebar-white" onclick="setSidebarColor('sidebar-white')"></div>
-                        <div class="color-swatch light-green active" data-color="sidebar-lightgreen" onclick="setSidebarColor('sidebar-lightgreen')"></div>
+                        <div class="color-swatch white active" data-color="sidebar-white" onclick="setSidebarColor('sidebar-white')"></div>
+                        <div class="color-swatch light-green" data-color="sidebar-lightgreen" onclick="setSidebarColor('sidebar-lightgreen')"></div>
                         <div class="color-swatch dark-gray" data-color="sidebar-darkgray" onclick="setSidebarColor('sidebar-darkgray')"></div>
                         <div class="color-swatch black" data-color="sidebar-black" onclick="setSidebarColor('sidebar-black')"></div>
                         <div class="color-swatch blue" data-color="sidebar-blue" onclick="setSidebarColor('sidebar-blue')"></div>
@@ -974,6 +1044,25 @@ function createFloatingGearButton() {
                     </div>
                 </div>
             </div>
+            
+            <!-- Action Buttons -->
+            <div class="theme-section action-buttons-section">
+                <div class="action-buttons">
+                    <button class="reset-btn" onclick="resetThemeSettings()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="1,4 1,10 7,10"></polyline>
+                            <path d="M3.51,15a9,9 0 1,0 2.13,-9.36L1,10"></path>
+                        </svg>
+                        Reset
+                    </button>
+                    <button class="done-btn" onclick="doneSettingsPanel()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                        </svg>
+                        Done
+                    </button>
+                </div>
+            </div>
         </div>
     `;
     
@@ -983,9 +1072,15 @@ function createFloatingGearButton() {
         toggleSettingsPanel();
     });
     
-    // Add click event to document to close panel
+    // Add click event to document to close panel (only on outside click)
     document.addEventListener('click', function(e) {
-        if (!gearButton.contains(e.target) && !settingsPanel.contains(e.target)) {
+        // Only handle dreamtheme panel, not other theme customizers
+        const dreamthemePanel = document.querySelector('.settings-panel');
+        if (!dreamthemePanel) return;
+        
+        // Don't close if clicking on gear button, settings panel, or any element inside settings panel
+        if (!gearButton.contains(e.target) && 
+            !settingsPanel.contains(e.target)) {
             hideSettingsPanel();
         }
     });
@@ -1019,6 +1114,19 @@ function showSettingsPanel() {
 function hideSettingsPanel() {
     const panel = document.querySelector('.settings-panel');
     panel.classList.remove('show');
+}
+
+// Close settings panel function (for close button)
+function closeSettingsPanel() {
+    console.log('❌ Closing theme customizer...');
+    hideSettingsPanel();
+}
+
+// Done settings panel function (for done button)
+function doneSettingsPanel() {
+    console.log('✅ Done with theme customizer...');
+    hideSettingsPanel();
+    showNotification('Theme settings saved!', 'success');
 }
 
 // Change top bar color function
@@ -4076,27 +4184,32 @@ function createFullscreenButton() {
         return;
     }
     
-    console.log('Creating fullscreen button...');
+    console.log('🔍 Creating fullscreen button...');
+    console.log('🔍 Looking for search bar...');
     
-    // Find search bar container
-    const searchBar = document.querySelector('input[placeholder*="Search"], .form-control[placeholder*="Search"], .search-bar input');
+    // Find search bar container with multiple selectors
+    const searchBar = document.querySelector('input[placeholder*="Search"], .form-control[placeholder*="Search"], .search-bar input, input[type="search"], .navbar-search input, .search-input, .form-control[type="search"]');
+    console.log('🔍 Search bar found:', searchBar);
+    
     if (!searchBar) {
-        console.log('Search bar not found, trying alternative approach');
+        console.log('❌ Search bar not found, trying alternative approach');
         // Fallback: create button in navbar
-        const navbar = document.querySelector('.navbar, .layout-top-section');
+        const navbar = document.querySelector('.navbar, .layout-top-section, .navbar-nav, .navbar-right, .navbar-left, .top-bar, .layout-top');
+        console.log('🔍 Navbar found:', navbar);
+        
         if (navbar) {
             fullscreenBtn = document.createElement('button');
             fullscreenBtn.id = 'btnFullscreen';
             fullscreenBtn.className = 'fullscreen-btn';
             fullscreenBtn.title = 'Toggle Fullscreen';
-            fullscreenBtn.innerHTML = '<i class="custom-fullscreen-icon"></i>';
+            fullscreenBtn.innerHTML = '<i class="custom-fullscreen-icon">⛶</i>';
             
             // Style for navbar
             fullscreenBtn.style.cssText = `
                 width: 35px !important;
                 height: 35px !important;
-                background: transparent !important;
-                border: 1px solid transparent !important;
+                background: rgba(255, 255, 255, 0.1) !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
                 border-radius: 4px !important;
                 color: white !important;
                 cursor: pointer !important;
@@ -4105,6 +4218,8 @@ function createFullscreenButton() {
                 justify-content: center !important;
                 margin-left: 10px !important;
                 vertical-align: middle !important;
+                z-index: 9999 !important;
+                position: relative !important;
             `;
             
             // Add to navbar
@@ -4116,9 +4231,10 @@ function createFullscreenButton() {
                 toggleFullscreen();
             });
             
-            console.log('Fullscreen button created in navbar');
+            console.log('✅ Fullscreen button created in navbar');
             return;
         }
+        console.log('❌ No navbar found either');
         return;
     }
     
@@ -4653,3 +4769,140 @@ function applyDefaultSidebarLayout() {
     
     console.log('✅ Default sidebar layout applied successfully');
 }
+
+// Reset Theme Settings Function
+function resetThemeSettings() {
+    console.log('🔄 Resetting theme settings to defaults...');
+    
+    // Reset theme color to black
+    setThemeColor('black');
+    
+    // Reset top bar color to white
+    setTopBarColor('white');
+    
+    // Reset sidebar color to white
+    setSidebarColor('sidebar-white');
+    
+    // Reset theme mode to light
+    setThemeMode('light');
+    
+    // Clear localStorage
+    localStorage.removeItem('dreamThemeColor');
+    localStorage.removeItem('dreamTopBarColor');
+    localStorage.removeItem('dreamSidebarColor');
+    localStorage.removeItem('dreamThemeMode');
+    
+    console.log('✅ Theme settings reset to defaults');
+    
+    // Show success message
+    showNotification('Theme settings reset to defaults!', 'success');
+}
+
+// Show Notification Function
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `theme-notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">${type === 'success' ? '✅' : 'ℹ️'}</span>
+            <span class="notification-message">${message}</span>
+        </div>
+    `;
+    
+    // Style the notification
+    notification.style.cssText = `
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
+        background: ${type === 'success' ? '#28a745' : '#17a2b8'} !important;
+        color: white !important;
+        padding: 12px 20px !important;
+        border-radius: 6px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        z-index: 999999 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        opacity: 0 !important;
+        transform: translateX(100%) !important;
+        transition: all 0.3s ease !important;
+        max-width: 300px !important;
+    `;
+    
+    // Add to body
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// FORCE CREATE GEAR BUTTON ON WINDOW LOAD
+window.addEventListener('load', function() {
+    console.log('🔧 WINDOW LOAD - Creating gear button...');
+    try {
+        createFloatingGearButton();
+        console.log('✅ Gear button created on window load');
+    } catch (e) {
+        console.error('❌ Gear button creation failed on window load:', e);
+    }
+    
+    console.log('📺 WINDOW LOAD - Creating fullscreen button...');
+    try {
+        createFullscreenButton();
+        console.log('✅ Fullscreen button created on window load');
+    } catch (e) {
+        console.error('❌ Fullscreen button creation failed on window load:', e);
+    }
+});
+
+// FORCE CREATE AFTER 2 SECONDS
+setTimeout(function() {
+    console.log('🔧 TIMEOUT - Creating gear button...');
+    try {
+        createFloatingGearButton();
+        console.log('✅ Gear button created on timeout');
+    } catch (e) {
+        console.error('❌ Gear button creation failed on timeout:', e);
+    }
+    
+    console.log('📺 TIMEOUT - Creating fullscreen button...');
+    try {
+        createFullscreenButton();
+        console.log('✅ Fullscreen button created on timeout');
+    } catch (e) {
+        console.error('❌ Fullscreen button creation failed on timeout:', e);
+    }
+}, 2000);
+
+// FORCE CREATE AFTER 5 SECONDS
+setTimeout(function() {
+    console.log('🔧 FINAL - Creating gear button...');
+    try {
+        createFloatingGearButton();
+        console.log('✅ Gear button created on final attempt');
+    } catch (e) {
+        console.error('❌ Gear button creation failed on final attempt:', e);
+    }
+    
+    console.log('📺 FINAL - Creating fullscreen button...');
+    try {
+        createFullscreenButton();
+        console.log('✅ Fullscreen button created on final attempt');
+    } catch (e) {
+        console.error('❌ Fullscreen button creation failed on final attempt:', e);
+    }
+}, 5000);
